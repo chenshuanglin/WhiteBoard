@@ -1,0 +1,176 @@
+@CHARSET "UTF-8";
+
+
+/*以下CSS代码是整体样式的设置*/
+body{
+	margin: 0;
+	padding: 0;
+	font-family: "Helvetica Neue","Hiragino Sans GB","Segoe UI","Microsoft Yahei","微软雅黑",Tahoma,Arial,STHeiti,sans-serif;
+}
+
+.container{
+	margin: 0 auto;
+	margin-top:10px;
+	padding: 0;
+	width: 920px;
+	height: 550px;
+	background-color: #eee;
+	box-shadow: 0px 1px 3px #000;
+}
+
+.namediv{
+	width:100%;
+	height:6%;
+	font-size:24px;
+	text-align:right;
+	background-color: #e7ecee;
+}
+
+.tooldiv{
+	width:100%;
+	height:7%;
+	background-color: #FFC;
+	box-shadow: 0px 1px 3px #000;
+}
+
+
+.contentdiv{
+	width:100%;
+	height: 87%;
+	
+}
+
+.stylediv{
+	width:6%;
+	height:100%;
+	background-color: #d6d6d6;
+	box-shadow: 0px 1px 3px #000;
+	float:left;
+}
+#mycanvas{
+	background-color:#4EA381;
+	}
+
+/*以下是工具栏样式的设置*/
+
+ul{
+	list-style: none;
+}
+
+.tooldiv ul{
+	padding:0px;
+	margin:0px;
+	margin-left: 3px;
+	padding-top:5px; 
+}
+.color
+{
+	width:50px;
+	margin-left:-10px;
+}
+
+.tooldiv ul li{
+	float: left;
+	margin-left: 12px;
+}
+
+.stylediv ul{ 
+	 padding:0px; 
+	 margin:0px;
+	 margin-left: 13px;
+}
+
+.stylediv ul li{
+	padding-top: 20px;
+}
+
+
+/*
+*提示属性
+*/
+.tishi{
+	display:none;
+	background-color:#666;
+	position:absolute;
+	margin-left:-1px;
+	margin-top:10px;
+	font-size:12px;
+	}
+	
+.zuospan{
+	display:none;
+	background-color:#666;
+	position:absolute;
+	margin-left:-30px;
+	float:right;
+	font-size:12px;
+	
+}
+
+  .textDiv
+    {
+        width:400px;
+        background:#CCC;
+        height:80px;   
+    }
+	
+	#Drigging{
+		filter: alpha(opacity=45); opacity:0.45;
+        border:solid 1px #666;
+		 line-height:80px;
+        text-align:center;
+		display:none;
+		left:300px;
+		top:100px;
+        position:absolute;
+	
+}
+
+
+#showInfo{
+		display:none;
+		position:absolute;
+		left:1px;
+		top:1px;
+		width:130px;
+		height:50px;
+		padding:5px;
+		background-color:#999;
+		z-index:9999;
+		border: 1px solid #5e4e3f;
+	}
+	
+#showRect
+{
+	display:none;
+	position:absolute;
+	left:1px;
+	top:1px;
+	width:90px;
+	height:23px;
+	padding:5px;
+	background-color:#999;
+	z-index:9999;
+	border: 1px solid #5e4e3f;
+}
+
+
+#showRect1
+{
+	display:none;
+	position:absolute;
+	left:1px;
+	top:1px;
+	width:90px;
+	height:23px;
+	padding:5px;
+	background-color:#999;
+	z-index:9999;
+	border: 1px solid #5e4e3f;
+}
+
+/*录制部分代码*/
+#recordImg{
+	width:30px;
+	height:30px;
+}

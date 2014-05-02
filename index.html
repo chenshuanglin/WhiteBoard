@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <script src="resources/js/jquery-1.6.js" type="text/javascript"></script>
+    <script src="resources/js/allObject.js" type="text/javascript"></script>
+    <script src="resources/js/jscolor.js" type="text/javascript"></script>
+    <script src="resources/js/jvslider.js" type="text/javascript"></script>
+     <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+	
+		//页面提醒显示js代码
+		function mouseover(obj)
+		{
+			obj="#tishi"+obj;
+			$(obj).css("display","block");
+		}
+		function mouseout(obj)
+		{
+			obj="#tishi"+obj;
+			$(obj).css("display","none");
+		}
+		function mouseover1(obj)
+		{
+			obj="#zuospan"+obj;
+			$(obj).css("display","block");
+		}
+		function mouseout1(obj)
+		{
+			obj="#zuospan"+obj;
+			$(obj).css("display","none");
+		}
+		
+		/*以下代码是点击录制的代码*/	
+		var isRecord = false;
+		function record()
+		{
+			if(isRecord)
+			{
+				$("#recordImg").attr("src","./resources/photo/zanting.png");
+				$("#reState").text("点击录制");
+				isRecord = false;
+				var date =new Date();
+				var opTime = date.getTime();
+				var opId = "'opId':'end'"; 
+				opTime = "'opTime':"+"'"+opTime+"'";
+				var dataEvent = "[{"+opId+","+opTime+"}]";
+				iosocket.send(dataEvent);
+				window.location.href="/save";
+			}
+			else
+			{
+				$("#recordImg").attr("src","./resources/photo/luzhi.png");
+				$("#reState").text("正在录制...");
+				isRecord = true;
+				var date =new Date();
+				var opTime = date.getTime();
+				var opId = "'opId':'begin'"; 
+				opTime = "'opTime':"+"'"+opTime+"'";
+				var dataEvent = "[{"+opId+","+opTime+"}]";
+				iosocket.send(dataEvent);
+				$.get("/begin", function(result){
+    				alert(result);
+  				});
+			}
+			
+		}			
+	</script>
+  </head>
+  <body>
+  <a href="javascript:void(0);" onclick="record();"><img src="./resources/photo/zanting.png" id="recordImg"/></a><label id="reState">点击录制</label>
+   <a href="/showFiles"><img src="./resources/photo/zanting.png" id="recordImg"/></a><label id="reState">播放已经录制的视频</label>
+    <div class="container">
+    	<div class="namediv"><img alt="logo" src="resources/photo/logo.png" style="width: 35px; height: 30px;">
+    	</div>
+    	<div class="tooldiv">
+    		<ul>
+    			<li><img src="resources/photo/baocun.png"  onmouseover="mouseover(1);" onmouseout="mouseout(1);" style="cursor:pointer;" id="save">
+                	<span class="tishi" id="tishi1">保存</span>
+                </li>
+    			<li style="padding-top: 2px;"><img src="resources/photo/zuo.jpg" onmouseover="mouseover(2);" onmouseout="mouseout(2);" style="cursor:pointer;" id="restore">
+                	<span class="tishi" id="tishi2">撤销</span>
+                 </li>
+    			<li style="padding-top: 2px;"><img src="resources/photo/you.jpg" onmouseover="mouseover(3);" onmouseout="mouseout(3);" style="cursor:pointer;" id="back">
+                	<span class="tishi" id="tishi3">恢复</span>
+                </li>
+    			<li style="padding-top: 2px;"><img src="resources/photo/fangda.jpg" onmouseover="mouseover(4);" onmouseout="mouseout(4);" style="cursor:pointer;">
+               	 	<span class="tishi" id="tishi4">放大</span>
+                 </li>
+    			<li style="padding-top: 2px;"><img src="resources/photo/suoxiao.jpg" onmouseover="mouseover(5);" onmouseout="mouseout(5);" style="cursor:pointer;">
+                	<span class="tishi" id="tishi5">缩小</span>
+                </li>
+    			<li>&nbsp;&nbsp;<label>T&nbsp;</label>
+    				<select style="height: 26px;" id="font_family">
+    					<option>宋体</option>
+    					<option>黑体</option>
+    					<option>微软雅黑</option>
+    					<option>新宋体</option>
+                        <option>新细明体</option>
+                        <option>仿宋</option>
+                        <option>楷体</option>
+                        <option>仿宋_GB2312</option>
+                        <option>楷体_GB2312</option>
+                        <option>cursive</option>
+                        <option>fantasy</option>
+                        <option>monospace</option>
+    				</select>
+    			</li>
+    			<li>size
+    				<select style="height: 26px;" id="font_size" >
+                    	<option>16</option>
+                        <option>18</option>
+                        <option>20</option>
+                     	<option>22</option>
+    					<option>24</option>
+    					<option>26</option>
+    					<option>28</option>
+    					<option>30</option>
+    					<option>32</option>
+                        <option>34</option>
+                        <option>36</option>
+                        <option>38</option>
+                        <option>40</option>
+                        <option>42</option>
+                        <option>44</option>
+                        <option>46</option>
+                        <option>48</option>
+                        <option>50</option>
+                        <option>52</option>
+                        <option>54</option>
+                        <option>56</option>
+                        <option>58</option>
+                        <option>60</option>
+                        <option>62</option>
+                        <option>64</option>
+                        <option>66</option>
+                        <option>68</option>
+                        <option>70</option>
+                        <option>72</option>
+                        <option>74</option>
+                        <option>76</option>
+                        <option>78</option>
+                        <option>80</option>
+    				</select>
+    			</li>
+    			<li style="padding-top: 2px;">
+                	<img src="resources/photo/color.jpg" onmouseover="mouseover(6);" onmouseout="mouseout(6);">
+                    <span class="tishi" id="tishi6">颜色</span>
+                </li>
+                <li><input class="color" id="color" value="000000"/></li>
+    		</ul>
+    	</div>
+    	<div class="contentdiv">
+    		<div class="stylediv">
+    			<ul>
+    				<li><span class="zuospan" id="zuospan1">粉笔</span>
+                    	<a href="javascript:void(0);" onmouseover="mouseover1(1);" onmouseout="mouseout1(1);" id="fenbi" >
+                        	<img alt="bi" src="resources/photo/fenbi.jpg">
+                        </a>
+                    </li>
+    				<li><span class="zuospan" id="zuospan2">直线</span>
+                    	<a href="javascript:void(0);" onmouseover="mouseover1(2);" onmouseout="mouseout1(2);" id="zhixian">
+                        	<img alt="zhixian" src="resources/photo/zhixian.jpg">
+                         </a>
+                    </li>
+    				<li><span class="zuospan" id="zuospan3">矩形</span>
+                    	<a href="#" onmouseover="mouseover1(3);" onmouseout="mouseout1(3);" id="juxing">
+                    		<img alt="juxing" src="resources/photo/juxing.jpg"> 
+                        </a>
+                        <div id="showRect">
+                        	<span class="zuospan" id="zuospan9">空心矩形</span>
+                    		<a href="#" onmouseover="mouseover1(9);" onmouseout="mouseout1(9);" id="kongjuxing" style="margin-left:20px;">
+                    			<img alt="juxing" src="resources/photo/juxing.jpg"> 
+                       		 </a>
+                             
+                             <span class="zuospan" id="zuospan10">实心矩形</span>
+                    		<a href="#" onmouseover="mouseover1(10);" onmouseout="mouseout1(10);" id="shijuxing">
+                    			<img alt="juxing" src="resources/photo/juxing.jpg"> 
+                       		 </a>
+                        </div>
+                    </li>
+    				<li><span class="zuospan" id="zuospan4">圆形</span>
+                    	<a href="#" onmouseover="mouseover1(4);" onmouseout="mouseout1(4);" id="yuanxing">
+                    		<img alt="yuan" src="resources/photo/yuan.jpg">
+                        </a>
+                        <div id="showRect1">
+                        	<span class="zuospan" id="zuospan11">空心圆形</span>
+                    		<a href="#" onmouseover="mouseover1(11);" onmouseout="mouseout1(11);" id="kongyuan" style="margin-left:20px;">
+                    			<img alt="yuan" src="resources/photo/yuan.jpg">
+                       		 </a>
+                             
+                             <span class="zuospan" id="zuospan12">实心圆形</span>
+                    		<a href="#" onmouseover="mouseover1(12);" onmouseout="mouseout1(12);" id="shiyuan">
+                    			<img alt="yuan" src="resources/photo/yuan.jpg"> 
+                       		 </a>
+                        </div>
+                    </li>
+    				<li><span class="zuospan" id="zuospan6">三角形</span>
+                   		<a href="#" onmouseover="mouseover1(6);" onmouseout="mouseout1(6);" id="sanjiaoxing">
+                    		<img alt="sanjiaoxing" src="resources/photo/sanjiaoxing.jpg"> 
+                        </a>
+                    </li>
+                    <li><span class="zuospan" id="zuospan8">曲线</span>
+                   		<a href="#" onmouseover="mouseover1(8);" onmouseout="mouseout1(8);" id="quxian">
+                    		<img alt="曲线" src="resources/photo/quxian.jpg"> 
+                        </a>
+                    </li>
+                    <li><span class="zuospan" id="zuospan5">橡皮檫</span>
+                   		<a href="#" onmouseover="mouseover1(5);" onmouseout="mouseout1(5);" id="xiangpica">
+                    		<img alt="xiangpicha" src="resources/photo/xiangpicha.jpg"> 
+                        </a>
+                        <div id="showInfo">
+								大小：<div id="slider"></div><label id="slidertext">16</label>
+								<script type="text/javascript">
+									$('#slider').jvslider({
+										vertical: false,
+										width: 100,
+										barHeight: 10,
+										barBorder: 1,
+										barBorderColor: '#aaa',
+										barRadius: 2,
+										barBackground: '#fff',
+										handleWidth: 10,
+										handleHeight: 12,
+										handleBorder: 1,
+										handleBorderColor: '#aaa',
+										handleRadius: 2,
+										handleBackground: '#fff',
+										handleDownBackground: '#eee',
+										processBackground: '#fc6',
+										percent: 16,
+										slide: function(percent){
+											//为了保证是偶数
+											if(percent%2 != 0)
+											{
+												percent=percent+1;
+											}
+											
+											$('#slidertext').html(percent);
+										
+											ERASER_WIDTH = percent;
+									},
+								click: function(percent){
+										//保证是偶数
+										if(percent%2 != 0)
+										{
+											percent=percent+1;
+										}
+										$('#slidertext').html(percent);
+										
+										ERASER_WIDTH = percent;
+									}
+								});
+								//参数（全部为可选项）说明：
+								//vertical: 是否使用纵向滑动条，默认false
+								//width: 滑动区域宽度
+								//barHeight: 滑动区域高度
+								//barBorder: 滑动区域边框宽度
+								//barBorderColor: 滑动区域边框颜色
+								//barRadius: 滑动区域圆角
+								//barBackground: 滑动区域背景
+								//handleWidth: 滑块宽度
+								//handleHeight: 滑块高度
+								//handleBorder: 滑块边框宽度
+								//handleBorderColor: 滑块边框颜色
+								//handleRadius: 滑块圆角
+								//handleBackground: 滑块背景
+								//handleDownBackground: 滑块点击时北京
+								//processBackground: 进度条背景
+								//percent: 起始百分比
+								//slide: 滑块滑动时调用程序
+								//click: 点击滑动区域时调用程序
+							</script>
+</div>
+                    </li>
+    				<li><span class="zuospan" id="zuospan7">文字</span>
+                    	<a href="#" onmouseover="mouseover1(7);" onmouseout="mouseout1(7);" id="wenzi">
+                    		<img alt="zi" src="resources/photo/zi.jpg">
+                        </a>
+                       <div id="Drigging" class="textDiv"><textarea class="textDiv" id="myText">请输入文字...输入完文字按shift+enter</textarea></div>
+                    </li>
+    			</ul>
+    		</div>
+            <div style="display:inline; float:right; width:94%; height:100%;">
+            	<canvas id="mycanvas" width="865" height="478"></canvas>
+                <script src="resources/js/main.js"></script>
+            </div>
+    	</div>
+    </div>
+  </body>
+</html>
+
+
+<body>
+</body>
+</html>
