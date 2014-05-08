@@ -28,6 +28,7 @@ function MyCanvas(canvas,allTimeEvent)
 //	context = canvas.getContext("2d");     //当前canvas的上下文对象
 //	allTimeEvent = allTimeEvent;         //当前电子白板的已经有的数据
 	this.color = "#000";      //默认画笔的颜色
+	this.allDrawingSurfaceData = null;   //全局画图数据
 	
 }
 
@@ -117,8 +118,8 @@ MyCanvas.prototype.drawLine = function()
 
 
 
-//暂时的测试代码
-MyCanvas.prototype.drawLine1 = function()
+//画直线的代码
+MyCanvas.prototype.drawStrLine = function()
 {
 	var mouseX,mouseY; 
 	var isDown = false;
@@ -130,7 +131,15 @@ MyCanvas.prototype.drawLine1 = function()
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		drawingSurfaceData = context.getImageData(0,0,canvas.width,canvas.height);
-		
+		//整合数据，发送的数据内容为画直线开始
+		var date =new Date();
+		var opTime = date.getTime();
+		var opId = "'opId':'canvas'"; 
+		opTime = "'opTime':"+"'"+opTime+"'";
+		var opType ="'opType':'STRLINE'";
+		var opStatus="'opStatus':'begin'";
+		var dataEvent = "[{"+opId+","+opTime+","+opStatus+","+opType+"}]";
+		iosocket.send(dataEvent);
 	}
 	
 	canvas.onmousemove = function(e)
@@ -147,7 +156,20 @@ MyCanvas.prototype.drawLine1 = function()
 			context.lineTo(pointx, pointy);
 			context.closePath();
 			context.stroke();
-			
+			//整合数据，发送的数据为正在画直线的过程
+			var date =new Date();
+			var opTime = date.getTime();
+			var opId = "'opId':'canvas'"; 
+			opTime = "'opTime':"+"'"+opTime+"'";
+			color = "'color':"+"'"+color+"'";
+			var beginX = "'beginX':"+"'"+mouseX+"'";
+			var beginY = "'beginY':"+"'"+mouseY+"'";
+			var endX = "'endX':"+"'"+pointx+"'";
+			var endY = "'endY':"+"'"+pointy+"'";
+			var opType ="'opType':'STRLINE'";
+			var opStatus="'opStatus':'continue'";
+			var dataEvent = "[{"+opId+","+opTime+","+color+","+beginX+","+beginY+","+endX+","+endY+","+opStatus+","+opType+"}]";
+			iosocket.send(dataEvent);
 		}
 	}
 	
@@ -156,6 +178,7 @@ MyCanvas.prototype.drawLine1 = function()
 		isDown = false;
 		var drawingSurfaceData = context.getImageData(0,0,canvas.width,canvas.height);
 		allDataImage.push(drawingSurfaceData);
+		//整合数据，发送的数据为画好直线之后
 	}
 }
 
@@ -433,9 +456,12 @@ MyCanvas.prototype.drawCurve = function()
 }
 
 
+
+
 //根据传递的参数决定画什么
 MyCanvas.prototype.drawEvery = function(dataEvent)  
 {	
+	//判断是否是画线的操作
 	if(dataEvent.opType == "LINE")
 	{
 		var color = dataEvent.color;
@@ -445,6 +471,48 @@ MyCanvas.prototype.drawEvery = function(dataEvent)
 		var endY = dataEvent.endY;
 		drawLine(beginX,beginY,endX,endY,color);
 	}
+	//判断是否是画直线的操作
+	if(dataEvent.opType == "STRLINE")
+	{
+		
+		if(dataEvent.opStatus == "begin")
+		{
+			this.allDrawingSurfaceData = context.getImageData(0,0,canvas.width,canvas.height);
+		}
+		if(dataEvent.opStatus == "continue")
+		{
+			context.putImageData(this.allDrawingSurfaceData,0,0);
+			var color = dataEvent.color;
+			var beginX =  dataEvent.beginX;
+			var beginY = dataEvent.beginY;
+			var endX = dataEvent.endX;
+			var endY = dataEvent.endY;
+			drawLine(beginX,beginY,endX,endY,color);
+		}
+	}
+	
+	//判断是否点击文本框的操作
+	if(dataEvent.opType == "WENZI")
+	{
+		if(dataEvent.opStatus == "show")
+		{
+			$("#Drigging").css("display","block");
+		}
+		if(dataEvent.opStatus == "clear")
+		{
+			$('#myText').val("");
+		}
+		if(dataEvent.opStatus == "move")
+		{
+			var left = dataEvent.left;
+			var top = dataEvent.top;
+			$("#Drigging").css("display","none");
+			$("#Drigging").css("left", left);
+        	$("#Drigging").css("top", top);
+	//		$("#Drigging").css("display","block");
+		}
+	}
+	
 };
 
 //绘制一个圆

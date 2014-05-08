@@ -1,0 +1,7 @@
+线传输的数据类型：
+var dateEvent = "[{"+opId+","+opTime+","+color+","+beginX+","+beginY+","+endX+","+endY+","+opType+"}]";
+直线的数据传输
+	开始画直线传送的数据
+		var dateEvent = "[{"+opId+","+opTime+","+opStatus+","+opType+"}]";
+	在画直线过程中传送的数据
+		var dataEvent = "[{"+opId+","+opTime+","+color+","+beginX+","+beginY+","+endX+","+endY+","+opStatus+","+opType+"}]";

@@ -1,3 +1,8 @@
+/*
+* @author 舒文静
+* date 2014/3/26
+*/
+
 var allTimeEvent = new Array();   //保留当前操作的事件数组
 var canvas;                      //定义一个画板对象
 var context;                     //定义一个画画板对象的工具
@@ -41,7 +46,7 @@ $(document).ready(function()
 	//点击直线
 	$("#zhixian").click(function()
 	{
-		mycanvas.drawLine1();
+		mycanvas.drawStrLine();
 	});
 	
 	//点击保存之后的事件
@@ -141,15 +146,7 @@ $(document).ready(function()
 			mycanvas.drawCurve();
 		});
 	
-	//点击字体
-	$("#wenzi").click(function()
-	{
-		var font_family = $("#font_family").val();
-		var font_size = $("#font_size").val()+"px";
-		var myfont = font_size+" "+font_family;
-		$("textarea").css("font",myfont);
-		$("#Drigging").css("display","block");
-	});
+	
 						
 						
 	//选择颜色
@@ -182,10 +179,38 @@ $(document).ready(function()
 	var offsetX=0;
     var offsetY=0;
 	
+	//点击字体
+	$("#wenzi").click(function()
+	{
+		var font_family = $("#font_family").val();
+		var font_size = $("#font_size").val()+"px";
+		var myfont = font_size+" "+font_family;
+		$("textarea").css("font",myfont);
+		$("#Drigging").css("display","block");
+		//整合发送数据
+		var date =new Date();
+		var opTime = date.getTime();
+		var opId = "'opId':'canvas'"; 
+		opTime = "'opTime':"+"'"+opTime+"'";
+		var opType ="'opType':'WENZI'";
+		var opStatus="'opStatus':'show'";
+		var dataEvent = "[{"+opId+","+opTime+","+opStatus+","+opType+"}]";
+		iosocket.send(dataEvent);
+	});
+	
 	//当鼠标focus在textarea中的时候，清空里面的内容				
 	$("#myText").focus(function()
 	{
 		$('#myText').val("");
+		//整合发送数据
+		var date =new Date();
+		var opTime = date.getTime();
+		var opId = "'opId':'canvas'"; 
+		opTime = "'opTime':"+"'"+opTime+"'";
+		var opType ="'opType':'WENZI'";
+		var opStatus="'opStatus':'clear'";
+		var dataEvent = "[{"+opId+","+opTime+","+opStatus+","+opType+"}]";
+		iosocket.send(dataEvent);
 	});
 						
 	//点击可拖动文本框的时候，获取文本框此时相对于父元素的内标签位置，并设置该div的cursor为可移动的
@@ -207,6 +232,18 @@ $(document).ready(function()
         var y = event.clientY-offsetY;
         $("#Drigging").css("left", x);
         $("#Drigging").css("top", y);
+		
+		//整合发送数据
+		var date =new Date();
+		var opTime = date.getTime();
+		var opId = "'opId':'canvas'"; 
+		opTime = "'opTime':"+"'"+opTime+"'";
+		var left = "'left':"+"'"+x+"'";
+		var top = "'top':"+"'"+y+"'";
+		var opType ="'opType':'WENZI'";
+		var opStatus="'opStatus':'move'";
+		var dataEvent = "[{"+opId+","+opTime+","+left+","+top+","+opStatus+","+opType+"}]";
+		iosocket.send(dataEvent);
     });
                
 	//以下代码是监控回车事件
