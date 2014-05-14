@@ -473,6 +473,15 @@ Mycanvas.prototype.drag = function()
 			var width = mouseX-pointX;
 			var height = mouseY-pointY;
 			allObject[index].move(width,height);
+			//打包数据进行发送
+			var mouseX1 = "'mouseX':"+"'"+width+"'";
+			var mouseY1 = "'mouseY':"+"'"+height+"'";
+			var indexStr = "'index':"+"'"+index+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'DRAG'";
+			//再次封装并发送
+			packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus);
+			
 			//交换橡皮擦位置
 			for(var j = index ; j < allObject.length ; j++)
 			{
@@ -542,6 +551,9 @@ Mycanvas.prototype.drawStrLine = function()
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		drawingSurfaceData = context.getImageData(0,0,this.width,this.height);
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'STRLINE'";
+		packageAndSend(opType,opStatus);
 	}
 	
 	
@@ -556,6 +568,17 @@ Mycanvas.prototype.drawStrLine = function()
 			myLine = new MyLine(mouseX,mouseY,pointx,pointy,color);
 			myLine.createPath(context);	
 			myLine.stroke(context);
+			
+			//封装数据
+			color = "'color':"+"'"+color+"'";
+			var mouseX1 = "'mouseX':"+"'"+mouseX+"'";
+			var mouseY1 = "'mouseY':"+"'"+mouseY+"'";
+			var pointX = "'pointX':"+"'"+pointx+"'";
+			var pointY = "'pointY':"+"'"+pointy+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'STRLINE'";
+			//再次封装并发送
+			packageAndSend(opType,color,mouseX1,mouseY1,pointX,pointY,opStatus);
 		}
 	}
 	
@@ -563,6 +586,9 @@ Mycanvas.prototype.drawStrLine = function()
 	{
 		isDown = false;
 		allObject.push(myLine);
+		var opStatus="'opStatus':'mouseUp'";
+		var opType ="'opType':'STRLINE'";
+		packageAndSend(opType,opStatus);
 	}
 }
 
@@ -581,6 +607,9 @@ Mycanvas.prototype.drawRect = function(isFill)
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		drawingSurfaceData = context.getImageData(0,0,this.width,this.height);
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'RECT'";
+		packageAndSend(opType,opStatus);
 	}
 	
 	this.canvas.onmousemove = function(e)
@@ -593,20 +622,38 @@ Mycanvas.prototype.drawRect = function(isFill)
 			var pointy =  e.clientY- this.offsetTop;
 			myRect = new MyRect(mouseX,mouseY,pointx,pointy,color);
 			myRect.createPath(context);
+			var fill;
 			if(isFill)
 			{
 				myRect.fill(context);
 				myRect.isfill = true;
+				fill = "'isfill':'yes'";
 			}
 			else{
 				myRect.stroke(context);
+				fill = "'isfill':'no'";
 			}
+			
+			//封装数据
+			color = "'color':"+"'"+color+"'";
+			var mouseX1 = "'mouseX':"+"'"+mouseX+"'";
+			var mouseY1 = "'mouseY':"+"'"+mouseY+"'";
+			var pointX = "'pointX':"+"'"+pointx+"'";
+			var pointY = "'pointY':"+"'"+pointy+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'RECT'";
+			
+			//再次封装并发送
+			packageAndSend(opType,color,mouseX1,mouseY1,pointX,pointY,fill,opStatus);
 		}
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
 		isDown = false;
+		var opStatus="'opStatus':'mouseUp'";
+		var opType ="'opType':'RECT'";
+		packageAndSend(opType,opStatus);
 		allObject.push(myRect);
 	}
 }
@@ -625,6 +672,9 @@ Mycanvas.prototype.drawTri = function(isFill)
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		drawingSurfaceData = context.getImageData(0,0,this.width,this.height);
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'TRI'";
+		packageAndSend(opType,opStatus);
 	}
 	
 	this.canvas.onmousemove = function(e)
@@ -637,21 +687,37 @@ Mycanvas.prototype.drawTri = function(isFill)
 			var pointy =  e.clientY- this.offsetTop;
 			myTri = new MyTri(mouseX,mouseY,pointx,pointy,color);
 			myTri.createPath(context);
+			var fill;
 			if(isFill)
 			{
 				myTri.fill(context);
 				myTri.isfill = true;
+				fill = "'isfill':'yes'";
 			}
 			else{
 				myTri.stroke(context);
+				fill = "'isfill':'no'";
 			}
+			//封装数据
+			color = "'color':"+"'"+color+"'";
+			var mouseX1 = "'mouseX':"+"'"+mouseX+"'";
+			var mouseY1 = "'mouseY':"+"'"+mouseY+"'";
+			var pointX = "'pointX':"+"'"+pointx+"'";
+			var pointY = "'pointY':"+"'"+pointy+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'TRI'";
 			
+			//再次封装并发送
+			packageAndSend(opType,color,mouseX1,mouseY1,pointX,pointY,fill,opStatus);
 		}
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
 		isDown = false;
+		var opStatus="'opStatus':'mouseUp'";
+		var opType ="'opType':'TRI'";
+		packageAndSend(opType,opStatus);
 		allObject.push(myTri);
 	}
 }
@@ -672,6 +738,9 @@ Mycanvas.prototype.drawArc = function(isFill)
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		drawingSurfaceData = context.getImageData(0,0,this.width,this.height);
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'ARC'";
+		packageAndSend(opType,opStatus);
 	}
 	
 	this.canvas.onmousemove = function(e)
@@ -684,21 +753,37 @@ Mycanvas.prototype.drawArc = function(isFill)
 			var pointy =  e.clientY- this.offsetTop;
 			myArc = new MyArc(mouseX,mouseY,pointx,pointy,color);
 			myArc.createPath(context);
+			var fill;
 			if(isFill)
 			{
 				myArc.fill(context);
 				myArc.isfill = true;
+				fill = "'isfill':'yes'";
 			}
 			else{
 				myArc.stroke(context);
+				fill = "'isfill':'no'";
 			}
+			//封装数据
+			color = "'color':"+"'"+color+"'";
+			var mouseX1 = "'mouseX':"+"'"+mouseX+"'";
+			var mouseY1 = "'mouseY':"+"'"+mouseY+"'";
+			var pointX = "'pointX':"+"'"+pointx+"'";
+			var pointY = "'pointY':"+"'"+pointy+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'ARC'";
 			
+			//再次封装并发送
+			packageAndSend(opType,color,mouseX1,mouseY1,pointX,pointY,fill,opStatus);
 		}
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
 		isDown = false;
+		var opStatus="'opStatus':'mouseUp'";
+		var opType ="'opType':'ARC'";
+		packageAndSend(opType,opStatus);
 		allObject.push(myArc);
 	}
 }
@@ -726,6 +811,9 @@ Mycanvas.prototype.eraser = function()
 	var context = this.context;
 	this.canvas.onmousedown = function(e)
 	{
+		//隐藏sliderbar
+		$("#showInfo").fadeOut(100);
+		
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
 		e.preventDefault();    //阻止cursor 改变
@@ -736,6 +824,16 @@ Mycanvas.prototype.eraser = function()
 		xiangjiao(mouseX,mouseY,context); //判断相交，并更改值
 		allObject.push(myEraser);
 		isDown = true;
+		//封装数据
+		mouseX1 = mouseX-ERASER_WIDTH/2;
+		mouseY1 = mouseY-ERASER_WIDTH/2;
+		var mouseX1 = "'mouseX':"+"'"+mouseX1+"'";
+		var mouseY1 = "'mouseY':"+"'"+mouseY1+"'";
+		var width = "'width':"+"'"+ERASER_WIDTH+"'";
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'ERASER'";
+		//再次封装并发送
+		packageAndSend(opType,width,mouseX1,mouseY1,opStatus);
 	}
 	
 	this.canvas.onmousemove = function(e)
@@ -753,15 +851,35 @@ Mycanvas.prototype.eraser = function()
 			//加入维护的对象列表中
 			xiangjiao(mouseX,mouseY,context); //判断相交，并更改值
 			allObject.push(myEraser);
-			
-//		drawRectangle(mouseX,mouseY,context);
+			//封装数据
+			mouseX1 = mouseX-ERASER_WIDTH/2;
+			mouseY1 = mouseY-ERASER_WIDTH/2;
+			var mouseX1 = "'mouseX':"+"'"+mouseX1+"'";
+			var mouseY1 = "'mouseY':"+"'"+mouseY1+"'";
+			var width = "'width':"+"'"+ERASER_WIDTH+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'ERASER'";
+			//再次封装并发送
+			packageAndSend(opType,width,mouseX1,mouseY1,opStatus);
+	//		drawRectangle(mouseX,mouseY,context);
 		}
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
-		context.clearRect(mouseX-ERASER_WIDTH/2,mouseY-ERASER_WIDTH/2,ERASER_WIDTH,ERASER_WIDTH);
 		isDown = false;
+		//封装数据
+		mouseX1 = mouseX-ERASER_WIDTH/2;
+		mouseY1 = mouseY-ERASER_WIDTH/2;
+		var mouseX1 = "'mouseX':"+"'"+mouseX1+"'";
+		var mouseY1 = "'mouseY':"+"'"+mouseY1+"'";
+		var width = "'width':"+"'"+ERASER_WIDTH+"'";
+		var opStatus="'opStatus':'mouseUp'";
+		var opType ="'opType':'ERASER'";
+		//再次封装并发送
+		packageAndSend(opType,width,mouseX1,mouseY1,opStatus);
+		context.clearRect(mouseX-ERASER_WIDTH/2,mouseY-ERASER_WIDTH/2,ERASER_WIDTH,ERASER_WIDTH);
+		
 	}
 	
 }
@@ -833,7 +951,10 @@ function xiangjiao(mouseX,mouseY,context)
 			else
 			{
 				if(numPoints[k] < 4)
+				{
 					allObject[k].isEra = true;
+				}
+					
 			}
 		}
 	}
@@ -847,7 +968,6 @@ Mycanvas.prototype.drawCurve = function()
 	var pointX1,pointY1,pointX2,pointY2,pointX3,pointY3;
 	var drawingSurfaceData;  //定义一个保存画板所有图形数据的变量
 	var context = this.context;
-	var color = "#"+$("#color").val(); //当前画笔的颜色
 	var myCur;
 	this.canvas.onmousedown = function(e)
 	{
@@ -865,10 +985,13 @@ Mycanvas.prototype.drawCurve = function()
 		}
 		if(numDown == 2)
 		{
-			myCur = new MyCur(pointX1,pointY1,pointX2,pointY2,pointX3,pointY3,color);
-			myCur.createPath(context);
-			myCur.stroke(context);	
+//			myCur = new MyCur(pointX1,pointY1,pointX2,pointY2,pointX3,pointY3,color);
+//			myCur.createPath(context);
+//			myCur.stroke(context);	
 			//drawCur(pointX1,pointY1,pointX3,pointY3,pointX2,pointY2);
+			var opStatus="'opStatus':'mouseDown'";
+			var opType ="'opType':'CUR'";
+			packageAndSend(opType,opStatus);
 		}
 	}
 	
@@ -876,12 +999,27 @@ Mycanvas.prototype.drawCurve = function()
 	{
 		if(numDown == 2)
 		{
+			var color = "#"+$("#color").val(); //当前画笔的颜色
 			context.putImageData(drawingSurfaceData,0,0);
 			pointX3 =e.clientX-this.offsetLeft;
 			pointY3 = e.clientY- this.offsetTop;
 			myCur = new MyCur(pointX1,pointY1,pointX2,pointY2,pointX3,pointY3,color);
 			myCur.createPath(context);
 			myCur.stroke(context);
+			
+			//封装数据
+			color = "'color':"+"'"+color+"'";
+			var mouseX1 = "'mouseX':"+"'"+pointX1+"'";
+			var mouseY1 = "'mouseY':"+"'"+pointY1+"'";
+			var pointX = "'pointX':"+"'"+pointX2+"'";
+			var pointY = "'pointY':"+"'"+pointY2+"'";
+			var middleX = "'middleX':"+"'"+pointX3+"'";
+			var middleY = "'middleY':"+"'"+pointY3+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			var opType ="'opType':'CUR'";
+			
+			//再次封装并发送
+			packageAndSend(opType,color,mouseX1,mouseY1,pointX,pointY,middleX,middleY,opStatus);
 		}
 	}
 	
@@ -890,6 +1028,9 @@ Mycanvas.prototype.drawCurve = function()
 		if(numDown == 3)
 		{
 			numDown =0;
+			var opStatus="'opStatus':'mouseUp'";
+			var opType ="'opType':'CUR'";
+			packageAndSend(opType,opStatus);
 			allObject.push(myCur);
 		}
 	}
@@ -915,6 +1056,14 @@ Mycanvas.prototype.drawLine = function()
 		var date =new Date();
 		var opTime = date.getTime();
 		myXian = new MyXian(pointX,pointY,color);
+		//封装数据
+		color = "'color':"+"'"+color+"'";
+		var mouseX = "'mouseX':"+"'"+pointX+"'";
+		var mouseY = "'mouseY':"+"'"+pointY+"'";
+		var opStatus="'opStatus':'mouseDown'";
+		var opType ="'opType':'LINE'";
+		//再次封装并发送
+		packageAndSend(opType,color,mouseX,mouseY,opStatus);
 	}
 	
 	
@@ -932,22 +1081,36 @@ Mycanvas.prototype.drawLine = function()
 			myXian.points.push(point);
 			myXian.createPath(context);
 			myXian.stroke(context);
-			
-			//直线的第一个点重置
-			pointX = pointX1;
-			pointY = pointY1;
+			//封装发送
+			var opType ="'opType':'LINE'";
+			var mouseX = "'mouseX':"+"'"+pointX1+"'";
+			var mouseY = "'mouseY':"+"'"+pointY1+"'";
+			var opStatus="'opStatus':'mouseMove'";
+			//再次封装并发送
+			packageAndSend(opType,mouseX,mouseY,opStatus);
 //			redraw();
 		}
 	}
 	
 	this.canvas.onmouseout = function(e)
 	{
-		isDown = false;
-		allObject.push(myXian);
+		if(isDown)
+		{
+			isDown = false;
+			var opType ="'opType':'LINE'";
+			var opStatus="'opStatus':'mouseUp'";
+			//再次封装并发送
+			packageAndSend(opType,opStatus);
+			allObject.push(myXian);	
+		}
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
+		var opType ="'opType':'LINE'";
+		var opStatus="'opStatus':'mouseUp'";
+		//再次封装并发送
+		packageAndSend(opType,opStatus);
 		allObject.push(myXian);
 		isDown = false;
 //		redraw();
@@ -959,6 +1122,10 @@ Mycanvas.prototype.drawLine = function()
 Mycanvas.prototype.selectColor = function()
 {
 	this.color ="#"+$("#color").val();
+	var opType ="'opType':'COLOR'";
+	color = "'color':"+"'"+$("#color").val()+"'";
+	//再次封装并发送
+	packageAndSend(opType,color);
 }
 
 //写入文字
@@ -977,6 +1144,16 @@ Mycanvas.prototype.writeText = function()
 	var text = $("#myText").val()
 	var myText = new MyText(x,y,myfont,text,color);
 	myText.stroke(this.context);
+	
+	color = "'color':"+"'"+color+"'";
+	var mouseX = "'mouseX':"+"'"+x+"'";
+	var mouseY = "'mouseY':"+"'"+y+"'";
+	var font = "'font':"+"'"+myfont+"'";
+	var textstr = "'text':"+"'"+text+"'";
+	var opStatus="'opStatus':'write'";
+	var opType ="'opType':'TEXT'";
+	//再次封装并发送
+	packageAndSend(opType,mouseX,mouseY,opStatus,font,textstr);
 
 }
 
@@ -998,4 +1175,22 @@ Mycanvas.prototype.forward = function()
 Mycanvas.prototype.back  = function()
 {
 	
+}
+
+//数据进行打包
+function packageAndSend()
+{
+	var date =new Date();
+	var opTime = date.getTime();
+	//先整合数据，弄成Json形式
+	var opId = "'opId':'canvas'"; 
+	opTime = "'opTime':"+"'"+opTime+"'";
+	var dataEvent = "[{"+opId+","+opTime;
+	for(var i = 0 ; i < arguments.length ; i++)
+	{
+		dataEvent = dataEvent+","+arguments[i];
+		
+	}
+	dataEvent =  dataEvent+"}]";
+	iosocket.send(dataEvent);
 }

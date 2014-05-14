@@ -28,12 +28,13 @@ $(document).ready(function()
 	iosocket = io.connect();
     iosocket.on('connect', function () {
 		alert("连接成功");
+		var replay = new Replay("mycanvas");
  		iosocket.on('message', function(message) {
 			//接收数据的处理代码
 				var alldata = eval(message);
 				if(alldata[0].opId == "canvas")
 				{
-					mycanvas.drawEvery(alldata[0]);
+					replay.playFromJson(alldata[0]);
 				}
           });
         iosocket.on('disconnect', function() {

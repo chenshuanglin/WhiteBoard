@@ -6,6 +6,7 @@
     <script src="resources/js/jquery-1.6.js" type="text/javascript"></script>
 <!--    <script src="resources/js/allObject.js" type="text/javascript"></script> -->
     <script src="resources/js/saveObject.js" type="text/javascript"></script>
+    <script src="resources/js/Replay.js" type="text/javascript"></script>
     <script src="resources/js/jscolor.js" type="text/javascript"></script>
     <script src="resources/js/jvslider.js" type="text/javascript"></script>
     <script src="resources/js/socket_io.js" type="text/javascript"></script>
@@ -228,7 +229,6 @@
 											}
 											
 											$('#slidertext').html(percent);
-										
 											ERASER_WIDTH = percent;
 									},
 								click: function(percent){
@@ -238,7 +238,6 @@
 											percent=percent+1;
 										}
 										$('#slidertext').html(percent);
-										
 										ERASER_WIDTH = percent;
 									}
 								});
