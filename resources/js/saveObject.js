@@ -106,6 +106,41 @@ MyLine.prototype.lengthToEra = function(x,y,x1,y1)
 		return false;
 	}
 }
+//显示被选中的边角
+MyLine.prototype.showEdit = function(context)
+{
+	var jiaoWidth = 5;
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.pointX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+}
+
+//判断编辑的是哪一个点
+MyLine.prototype.judgeEdit = function(x,y)
+{
+	//对四个角进行判断，误差范围是5px,顺时针判断
+	var jiaoWidth = 5;
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		 return 1;  //代表落在第一个点上 ， 点是顺时针的
+	}
+	if((x >= this.pointX-jiaoWidth && x <= this.pointX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		return 2;
+	}
+	//没有找到返回0
+	return 0;
+}
+//根据对应的哪一个点进行放大和缩小
+MyLine.prototype.change = function(id,x,y){
+	if(id == 1){
+		this.mouseX = this.mouseX-x;
+		this.mouseY = this.mouseY-y;
+	}
+	if(id == 2){
+		this.pointX = this.pointX-x;
+		this.pointY = this.pointY-y;
+	}
+}
 
 
 //矩形对象
@@ -152,6 +187,71 @@ MyRect.prototype.move = function(x,y)
 	this.mouseY = this.mouseY-y;
 	this.pointX = this.pointX-x;
 	this.pointY = this.pointY-y;
+}
+
+function drawJiao(mouseX,mouseY,width,context)
+{
+	context.save();
+	context.beginPath();
+	context.strokeStyle ="#fff";	
+	context.rect(mouseX,mouseY,width,width);
+	context.closePath();
+	context.stroke();
+	context.restore();
+}
+
+//先预留的
+MyRect.prototype.showEdit = function(context)
+{
+	var jiaoWidth = 5;
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.pointX-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.pointX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.mouseX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+}
+
+//判断编辑的是哪一个点
+MyRect.prototype.judgeEdit = function(x,y)
+{
+	//对四个角进行判断，误差范围是5px,顺时针判断
+	var jiaoWidth = 5;
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		 return 1;  //代表落在第一个点上 ， 点是顺时针的
+	}
+	if((x >= this.pointX-jiaoWidth && x <= this.pointX+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		return 2;
+	}
+	if((x >= this.pointX-jiaoWidth && x <= this.pointX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		return 3;
+	}
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		 return 4;
+	}
+	//没有找到返回0
+	return 0;
+}
+//根据对应的哪一个点进行放大和缩小
+MyRect.prototype.change = function(id,x,y){
+	if(id == 1){
+		this.mouseX = this.mouseX-x;
+		this.mouseY = this.mouseY-y;
+	}
+	if(id == 2){
+		this.pointX = this.pointX-x;
+		this.mouseY = this.mouseY-y;
+	}
+	if(id == 3){
+		this.pointX = this.pointX-x;
+		this.pointY = this.pointY-y;
+	}
+	if(id == 4){
+		this.mouseX = this.mouseX-x;
+		this.pointY = this.pointY-y;
+	}
 }
 
 //三角形对象
@@ -202,6 +302,52 @@ MyTri.prototype.move = function(x,y)
 	this.pointY = this.pointY-y;
 }
 
+MyTri.prototype.showEdit = function(context)
+{
+	var jiaoWidth = 5;
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.mouseX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.pointX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+	
+}
+
+//判断编辑的是哪一个点
+MyTri.prototype.judgeEdit = function(x,y)
+{
+	//对四个角进行判断，误差范围是5px,顺时针判断
+	var jiaoWidth = 5;
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		 return 1;  //代表落在第一个点上 ， 点是顺时针的
+	}
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		 return 2;
+	}
+	if((x >= this.pointX-jiaoWidth && x <= this.pointX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		return 3;
+	}
+	//没有找到返回0
+	return 0;
+}
+//根据对应的哪一个点进行放大和缩小
+MyTri.prototype.change = function(id,x,y){
+	if(id == 1){
+		this.mouseX = this.mouseX-x;
+		this.mouseY = this.mouseY-y;
+	}
+	if(id == 2){
+		this.mouseX = this.mouseX-x;
+		this.pointY = this.pointY-y;
+	}
+	if(id == 3){
+		this.pointX = this.pointX-x;
+		this.pointY = this.pointY-y;
+	}
+	
+}
+
 //圆的对象
 var MyArc = function(mouseX,mouseY,pointX,pointY,strokeStyle)
 {
@@ -209,6 +355,9 @@ var MyArc = function(mouseX,mouseY,pointX,pointY,strokeStyle)
 	this.mouseY = mouseY;
 	this.pointX = pointX;
 	this.pointY = pointY;
+	var pointx = this.pointX>this.mouseX?(this.pointX-this.mouseX):(this.mouseX-this.pointX);
+	var pointy = this.pointY>this.mouseY?(this.pointY-this.mouseY):(this.mouseY-this.pointY);
+	this.radius = Math.sqrt(pointx*pointx+pointy*pointy);
 	this.strokeStyle = strokeStyle;
 	this.name ="MYARC";
 	this.isEra = false;
@@ -218,10 +367,13 @@ var MyArc = function(mouseX,mouseY,pointX,pointY,strokeStyle)
 MyArc.prototype.createPath = function(context)
 {
 	context.beginPath();
-	var pointx = this.pointX>this.mouseX?(this.pointX-this.mouseX):(this.mouseX-this.pointX);
+/*	var pointx = this.pointX>this.mouseX?(this.pointX-this.mouseX):(this.mouseX-this.pointX);
 	var pointy = this.pointY>this.mouseY?(this.pointY-this.mouseY):(this.mouseY-this.pointY);
 	var radius = Math.sqrt(pointx*pointx+pointy*pointy);
-	context.arc(this.mouseX, this.mouseY, radius, 0, 2*Math.PI, true);
+
+	this.radius = radius;
+	*/
+	context.arc(this.mouseX, this.mouseY, this.radius, 0, 2*Math.PI, true);
 	context.closePath();
 }
 
@@ -245,8 +397,61 @@ MyArc.prototype.move = function(x,y)
 {
 	this.mouseX = this.mouseX-x;
 	this.mouseY = this.mouseY-y;
-	this.pointX = this.pointX-x;
-	this.pointY = this.pointY-y;
+}
+
+MyArc.prototype.showEdit = function(context)
+{
+	var jiaoWidth = 5;
+	//先画圆上的四个角
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY-this.radius-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.mouseX+this.radius-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY+this.radius-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.mouseX-this.radius-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	
+}
+
+//判断编辑的是哪一个点
+MyArc.prototype.judgeEdit = function(x,y)
+{
+	//对四个角进行判断，误差范围是5px,顺时针判断
+	var jiaoWidth = 5;
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY-this.radius-jiaoWidth && y <= this.mouseY-this.radius+jiaoWidth))
+	{
+		 return 1;  //代表落在第一个点上 ， 点是顺时针的
+	}
+	if((x >= this.mouseX+this.radius-jiaoWidth && x <= this.mouseX+this.radius+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		return 2;
+	}
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY+this.radius-jiaoWidth && y <= this.mouseY+this.radius+jiaoWidth))
+	{
+		return 3;
+	}
+	if((x >= this.mouseX-this.radius-jiaoWidth && x <= this.mouseX-this.radius+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		 return 4;
+	}
+	//没有找到返回0
+	return 0;
+}
+//根据对应的哪一个点进行放大和缩小
+MyArc.prototype.change = function(id,x,y){
+	if(id == 1){
+		this.radius = this.radius+y/2;
+		this.mouseY = this.mouseY-y/2;
+	}
+	if(id == 2){
+		this.radius = this.radius-x/2;
+		this.mouseX = this.mouseX-x/2;
+	}
+	if(id == 3){
+		this.radius = this.radius-y/2;
+		this.mouseY = this.mouseY-y/2;
+	}
+	if(id == 4){
+		this.radius = this.radius+x/2;
+		this.mouseX = this.mouseX-x/2;
+	}
 }
 //二次贝塞尔曲线
 var MyCur = function(mouseX,mouseY,pointX,pointY,middleX,middleY,strokeStyle)
@@ -288,6 +493,7 @@ MyCur.prototype.fill = function(context)
 	context.restore();
 }
 
+
 MyCur.prototype.move = function(x,y)
 {
 	this.mouseX = this.mouseX-x;
@@ -296,6 +502,52 @@ MyCur.prototype.move = function(x,y)
 	this.pointY = this.pointY-y;
 	this.middleX = this.middleX-x;
 	this.middleY = this.middleY-y;
+}
+
+MyCur.prototype.showEdit = function(context)
+{
+	var jiaoWidth = 5;
+	drawJiao(this.mouseX-jiaoWidth,this.mouseY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.middleX-jiaoWidth,this.middleY-jiaoWidth,jiaoWidth*2,context);
+	drawJiao(this.pointX-jiaoWidth,this.pointY-jiaoWidth,jiaoWidth*2,context);
+	
+}
+
+//判断编辑的是哪一个点
+MyCur.prototype.judgeEdit = function(x,y)
+{
+	//对四个角进行判断，误差范围是5px,顺时针判断
+	var jiaoWidth = 5;
+	if((x >= this.mouseX-jiaoWidth && x <= this.mouseX+jiaoWidth) && (y >= this.mouseY-jiaoWidth && y <= this.mouseY+jiaoWidth))
+	{
+		 return 1;  //代表落在第一个点上 ， 点是顺时针的
+	}
+	if((x >= this.middleX-jiaoWidth && x <= this.middleX+jiaoWidth) && (y >= this.middleY-jiaoWidth && y <= this.middleY+jiaoWidth))
+	{
+		 return 2;
+	}
+	if((x >= this.pointX-jiaoWidth && x <= this.pointX+jiaoWidth) && (y >= this.pointY-jiaoWidth && y <= this.pointY+jiaoWidth))
+	{
+		return 3;
+	}
+	//没有找到返回0
+	return 0;
+}
+//根据对应的哪一个点进行放大和缩小
+MyCur.prototype.change = function(id,x,y){
+	if(id == 1){
+		this.mouseX = this.mouseX-x;
+		this.mouseY = this.mouseY-y;
+	}
+	if(id == 2){
+		this.middleX = this.middleX-x;
+		this.middleY = this.middleY-y;
+	}
+	if(id == 3){
+		this.pointX = this.pointX-x;
+		this.pointY = this.pointY-y;
+	}
+	
 }
 
 //线的对象
@@ -425,44 +677,156 @@ var Mycanvas = function(canvasId)
 {
 	this.canvas = document.getElementById(canvasId);
 	this.context = this.canvas.getContext("2d");
+	this.allObject = new Array();
 }
+
+Mycanvas.prototype.pushObject = function(object)
+{
+	this.allObject.push(object);
+}
+
+//判断鼠标所在的点是处于哪个对象上
+Mycanvas.prototype.choseIndex = function(mouseX,mouseY)
+{
+	var obj;
+	var index = -1;
+	for(var i = 0 ; i < this.allObject.length ; i++)
+	{
+		obj = this.allObject[i];
+		obj.createPath(this.context);
+		if( !obj.isEra && this.context.isPointInPath(mouseX,mouseY) && obj.name!="MYERA")
+		{
+			index = i;
+			break;
+		}
+		//如果是直线的话进行如下操作
+		if(!obj.isEra && obj.name == "MYLINE" && obj.isPointIn(mouseX,mouseY))
+		{
+			index = i;
+			break;
+		}
+	}
+	return index;
+}
+//重绘不显示选中点
+Mycanvas.prototype.redrawNo = function()
+{
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	for(var i = 0 ; i < this.allObject.length ; i++)
+	{
+		var obj = this.allObject[i];
+		obj.createPath(this.context);
+		if(obj.isfill)
+		{
+			obj.fill(this.context);
+		}
+		else
+		{
+			obj.stroke(this.context);
+		}
+		if(obj.name == "MYERA")
+		{
+			obj.clear(this.context);
+		}
+	}
+}
+
+
+//重绘所有对象的方法，并根据index显示被选中点
+Mycanvas.prototype.redraw = function(index)
+{
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	for(var i = 0 ; i < this.allObject.length ; i++)
+	{
+		var obj = this.allObject[i];
+		obj.createPath(this.context);
+		if(obj.isfill)
+		{
+			obj.fill(this.context);
+		}
+		else
+		{
+			obj.stroke(this.context);
+		}
+		if(obj.name == "MYERA")
+		{
+			obj.clear(this.context);
+		}
+		//判断是哪个重绘的时候才显示哪个
+		if(index == i)
+		{
+			obj.showEdit(this.context);
+		}	
+	}
+}
+
 
 //拖动的方法
 Mycanvas.prototype.drag = function()
 {
-	var index;
+	var index =-1;
 	var mouseX,mouseY;
 	var isDown = false;
 	var context = this.context;
 	
 	var isDrag = false;
+	var isEdit = false;   //是否处于编辑状态
+	var isWhich = 0 ;     //选中了哪个角
+	var canEdit = false;
+	var that = this;
 	this.canvas.onmousedown = function(e)
 	{
 		mouseX =e.clientX-this.offsetLeft;
 		mouseY = e.clientY- this.offsetTop;
-		
 		isDown = true;
-//		for(var i = allObject.length-1 ; i >= 0 ; i-- )
-		for(var i = 0 ; i < allObject.length ; i++)
+		
+		//判断拖动哪个
+		var obj;
+		if(!canEdit)
 		{
-			var obj = allObject[i];
-			obj.createPath(context);
-			if( !obj.isEra && context.isPointInPath(mouseX,mouseY) && obj.name!="MYERA")
+			index = that.choseIndex(mouseX,mouseY);  //找出当前落在哪个位置上
+			if(index != -1)
 			{
-				index = i;
+				that.redraw(index);
 				isDrag = true;
-				break;
+				that.allObject[index].showEdit(context);
+				canEdit = true;
+				
+				//打包数据进行发送
+				var indexStr = "'index':"+"'"+index+"'";
+				var opStatus="'opStatus':'mouseDown'";
+				var opType ="'opType':'DRAG'";
+				//再次封装并发送
+				packageAndSend(opType,opStatus,indexStr);
 			}
-			//如果是直线的话进行如下操作
-			if(!obj.isEra && obj.name == "MYLINE" && obj.isPointIn(mouseX,mouseY))
+		}
+		
+		//根据点中的哪个再进行判断，是否是属于编辑状态
+		else
+		{
+			isWhich = that.allObject[index].judgeEdit(mouseX,mouseY);
+			if(isWhich != 0)
 			{
-				index = i;
+				isEdit = true;
 				isDrag = true;
-				break;
+			}
+			else
+			{
+				that.allObject[index].createPath(context);
+				if(context.isPointInPath(mouseX,mouseY))
+				{
+					isDrag = true;
+					
+				}
+				else
+				{
+					canEdit = false;
+					this.onmousedown(e);  //递归调用方法
+				}
+				
 			}
 		}
 	}
-	
 	this.canvas.onmousemove = function(e)
 	{
 		if(isDown && isDrag)
@@ -472,24 +836,41 @@ Mycanvas.prototype.drag = function()
 			
 			var width = mouseX-pointX;
 			var height = mouseY-pointY;
-			allObject[index].move(width,height);
-			//打包数据进行发送
-			var mouseX1 = "'mouseX':"+"'"+width+"'";
-			var mouseY1 = "'mouseY':"+"'"+height+"'";
-			var indexStr = "'index':"+"'"+index+"'";
-			var opStatus="'opStatus':'mouseMove'";
-			var opType ="'opType':'DRAG'";
-			//再次封装并发送
-			packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus);
-			
+			if(isEdit){ //编辑的话进行如下操作
+				that.allObject[index].change(isWhich,width,height);	
+				
+				//打包数据进行发送
+				var mouseX1 = "'mouseX':"+"'"+width+"'";
+				var mouseY1 = "'mouseY':"+"'"+height+"'";
+				var indexStr = "'index':"+"'"+index+"'";
+				var whichNum = "'whichNum':"+"'"+isWhich+"'";
+				var opStatus="'opStatus':'mouseMove'";
+				var isInEdit="'isEdit':'yes'";
+				var opType ="'opType':'DRAG'";
+				//再次封装并发送
+				packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus,isInEdit,whichNum);
+			}
+			else{
+				that.allObject[index].move(width,height);
+				
+				//打包数据进行发送
+				var mouseX1 = "'mouseX':"+"'"+width+"'";
+				var mouseY1 = "'mouseY':"+"'"+height+"'";
+				var indexStr = "'index':"+"'"+index+"'";
+				var opStatus="'opStatus':'mouseMove'";
+				var isInEdit="'isEdit':'no'";
+				var opType ="'opType':'DRAG'";
+				//再次封装并发送
+				packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus,isInEdit);
+			}
 			//交换橡皮擦位置
-			for(var j = index ; j < allObject.length ; j++)
+			for(var j = index ; j < that.allObject.length ; j++)
 			{
-				if(allObject[j].name == "MYERA")
+				if(that.allObject[j].name == "MYERA")
 				{
-					var temp = allObject[j];
-					allObject[j] = allObject[index];
-					allObject[index] = temp;
+					var temp = that.allObject[j];
+					that.allObject[j] = that.allObject[index];
+					that.allObject[index] = temp;
 					index = j;
 				}
 			}
@@ -497,43 +878,19 @@ Mycanvas.prototype.drag = function()
 			//更改值
 			mouseX = pointX;
 			mouseY = pointY;
-			
-			context.clearRect(0,0,this.width,this.height);
-/*			for(var i = allObject.length-1 ; i >= 0 ; i-- )
-			{
-				var obj = allObject[i];
-				obj.createPath(context);
-				obj.stroke(context);
-				obj.clear(context);
-				
-			}
-	*/		
-			for(var i = 0 ; i < allObject.length ; i++)
-			{
-				var obj = allObject[i];
-				obj.createPath(context);
-				if(obj.isfill)
-				{
-					obj.fill(context);
-				}
-				else
-				{
-					obj.stroke(context);
-				}
-				if(obj.name == "MYERA")
-				{
-					obj.clear(context);
-				}
-				
-			}
+			//重绘
+			that.redraw(index);
 
 		}
+
 	}
 	
 	this.canvas.onmouseup = function(e)
 	{
 		isDrag = false;
 		isDown = false;
+		isEdit = false;
+		isWhich = 0;
 	}
 }
 
@@ -545,6 +902,8 @@ Mycanvas.prototype.drawStrLine = function()
 	var isDown = false; 
 	var myLine;
 	var context = this.context;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		isDown = true;
@@ -585,7 +944,7 @@ Mycanvas.prototype.drawStrLine = function()
 	this.canvas.onmouseup = function(e)
 	{
 		isDown = false;
-		allObject.push(myLine);
+		that.pushObject(myLine);
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'STRLINE'";
 		packageAndSend(opType,opStatus);
@@ -601,6 +960,8 @@ Mycanvas.prototype.drawRect = function(isFill)
 	var isDown = false; 
 	var myRect;
 	var context = this.context;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		isDown = true;
@@ -654,7 +1015,7 @@ Mycanvas.prototype.drawRect = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'RECT'";
 		packageAndSend(opType,opStatus);
-		allObject.push(myRect);
+		that.pushObject(myRect);
 	}
 }
 
@@ -666,6 +1027,8 @@ Mycanvas.prototype.drawTri = function(isFill)
 	var isDown = false; 
 	var myTri;
 	var context = this.context;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		isDown = true;
@@ -718,7 +1081,7 @@ Mycanvas.prototype.drawTri = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'TRI'";
 		packageAndSend(opType,opStatus);
-		allObject.push(myTri);
+		that.pushObject(myTri);
 	}
 }
 
@@ -732,6 +1095,8 @@ Mycanvas.prototype.drawArc = function(isFill)
 	var isDown = false; 
 	var myArc;
 	var context = this.context;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		isDown = true;
@@ -784,7 +1149,7 @@ Mycanvas.prototype.drawArc = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'ARC'";
 		packageAndSend(opType,opStatus);
-		allObject.push(myArc);
+		that.pushObject(myArc);
 	}
 }
 
@@ -809,6 +1174,8 @@ Mycanvas.prototype.eraser = function()
 	var mouseX,mouseY;
 	var isDown = false;  //判断是否
 	var context = this.context;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		//隐藏sliderbar
@@ -821,8 +1188,8 @@ Mycanvas.prototype.eraser = function()
 		myEraser.createPath(context);
 		myEraser.stroke(context);
 		//加入维护的对象列表中
-		xiangjiao(mouseX,mouseY,context); //判断相交，并更改值
-		allObject.push(myEraser);
+		that.xiangjiao(mouseX,mouseY); //判断相交，并更改值
+		that.pushObject(myEraser);
 		isDown = true;
 		//封装数据
 		mouseX1 = mouseX-ERASER_WIDTH/2;
@@ -849,8 +1216,8 @@ Mycanvas.prototype.eraser = function()
 			myEraser.createPath(context);
 			myEraser.stroke(context);
 			//加入维护的对象列表中
-			xiangjiao(mouseX,mouseY,context); //判断相交，并更改值
-			allObject.push(myEraser);
+			that.xiangjiao(mouseX,mouseY); //判断相交，并更改值
+			that.pushObject(myEraser);
 			//封装数据
 			mouseX1 = mouseX-ERASER_WIDTH/2;
 			mouseY1 = mouseY-ERASER_WIDTH/2;
@@ -901,8 +1268,7 @@ MyPoint.prototype.getY = function()
 	return this.y;
 }
 
-//判断是否橡皮擦和某个图形相交
-function xiangjiao(mouseX,mouseY,context)
+Mycanvas.prototype.xiangjiao = function(mouseX,mouseY)
 {
 	var r = ERASER_WIDTH/2;
 	var points = new Array();
@@ -914,9 +1280,10 @@ function xiangjiao(mouseX,mouseY,context)
 	points.push(point2);
 	points.push(point3);
 	points.push(point4);
+	var context = this.context;
 	//定义一个保存有几个点是在图形里面的数组对像
 	var numPoints = [];
-	for(var i = 0 ; i < allObject.length ; i++)
+	for(var i = 0 ; i < this.allObject.length ; i++)
 	{
 		numPoints[i] = 0 ;
 	}
@@ -924,41 +1291,42 @@ function xiangjiao(mouseX,mouseY,context)
 	//遍历四个点判断是否跟某个图形有相交，如果相交的话，把某个图形的isEra 置为true
 	for(var j = 0; j < points.length ; j++)
 	{
-		for(var i = 0 ; i < allObject.length ; i++)
+		for(var i = 0 ; i < this.allObject.length ; i++)
 		{
-			var obj = allObject[i];
+			var obj = this.allObject[i];
 			obj.createPath(context);
 			if(obj.name!="MYERA" && context.isPointInPath(points[j].getX(),points[j].getY()))
 			{
-//				allObject[i].isEra = true;
+//				that.allObject[i].isEra = true;
 				numPoints[i] = numPoints[i]+1;
 			}
 			if(obj.name == "MYLINE" && obj.lengthToEra(point1.x,point1.y,point4.x,point4.y))
 			{
-				allObject[i].isEra = true;
+				that.allObject[i].isEra = true;
 			}
 		}
 	}
 	//遍历numPoints对象
-	for(var k = 0 ;  k < allObject.length ; k++)
+	for(var k = 0 ;  k < this.allObject.length ; k++)
 	{
 		if(numPoints[k] > 0 )
 		{
-			if(allObject[k].isfill == true)
+			if(this.allObject[k].isfill == true)
 			{
-				allObject[k].isEra = true;
+				this.allObject[k].isEra = true;
 			}
 			else
 			{
 				if(numPoints[k] < 4)
 				{
-					allObject[k].isEra = true;
+					this.allObject[k].isEra = true;
 				}
 					
 			}
 		}
 	}
 }
+
 
 
 //绘制二次贝塞尔曲线
@@ -969,6 +1337,8 @@ Mycanvas.prototype.drawCurve = function()
 	var drawingSurfaceData;  //定义一个保存画板所有图形数据的变量
 	var context = this.context;
 	var myCur;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		drawingSurfaceData = context.getImageData(0,0,this.width,this.height);
@@ -1031,8 +1401,9 @@ Mycanvas.prototype.drawCurve = function()
 			var opStatus="'opStatus':'mouseUp'";
 			var opType ="'opType':'CUR'";
 			packageAndSend(opType,opStatus);
-			allObject.push(myCur);
+			that.pushObject(myCur);
 		}
+		
 	}
 }
 
@@ -1047,6 +1418,8 @@ Mycanvas.prototype.drawLine = function()
 	var pointX,pointY;
 	var context = this.context;
 	var myXian;
+	var that = this;
+	that.redrawNo();  //重绘
 	this.canvas.onmousedown = function(e)
 	{
 		var color = "#"+$("#color").val(); //当前画笔的颜色 //当前画笔的颜色
@@ -1101,7 +1474,7 @@ Mycanvas.prototype.drawLine = function()
 			var opStatus="'opStatus':'mouseUp'";
 			//再次封装并发送
 			packageAndSend(opType,opStatus);
-			allObject.push(myXian);	
+			that.pushObject(myXian);	
 		}
 	}
 	
@@ -1111,7 +1484,7 @@ Mycanvas.prototype.drawLine = function()
 		var opStatus="'opStatus':'mouseUp'";
 		//再次封装并发送
 		packageAndSend(opType,opStatus);
-		allObject.push(myXian);
+		that.pushObject(myXian);
 		isDown = false;
 //		redraw();
 	}
@@ -1129,21 +1502,14 @@ Mycanvas.prototype.selectColor = function()
 }
 
 //写入文字
-Mycanvas.prototype.writeText = function()
+Mycanvas.prototype.writeText = function(x,y,myfont,text,color)
 {
-	var x = $("#Drigging").css("left");  //获取可拖动文本框的距离左边框的距离
-	x = parseInt(x)-this.canvas.offsetLeft+5;   //跟画板的距离差
-	var y =$("#Drigging").css("top");    
-	y=parseInt(y)-this.canvas.offsetTop+18;				
-	//得到字体和字号大小
-	var font_family = $("#font_family").val();
-	var font_size = $("#font_size").val()+"px";
-	var myfont = font_size+" "+font_family;
-	//得到颜色
-	var color = "#"+$("#color").val();
-	var text = $("#myText").val()
+	x = x-this.canvas.offsetLeft+5;;
+	y = y-this.canvas.offsetTop+18;
 	var myText = new MyText(x,y,myfont,text,color);
 	myText.stroke(this.context);
+	
+	this.pushObject(myText);
 	
 	color = "'color':"+"'"+color+"'";
 	var mouseX = "'mouseX':"+"'"+x+"'";
@@ -1154,6 +1520,7 @@ Mycanvas.prototype.writeText = function()
 	var opType ="'opType':'TEXT'";
 	//再次封装并发送
 	packageAndSend(opType,mouseX,mouseY,opStatus,font,textstr);
+	this.redrawNo();
 
 }
 

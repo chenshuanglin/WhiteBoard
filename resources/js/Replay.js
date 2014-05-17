@@ -21,6 +21,7 @@ var Replay = function (canvasId) {
 }
 //根据传递过来的对象进行操作
 Replay.prototype.playFromJson= function(dataEvent) {
+//	this.redrawNo();
 	switch(dataEvent.opType) {
 		case "LINE":
 			this.drawLine(dataEvent);  
@@ -52,6 +53,74 @@ Replay.prototype.playFromJson= function(dataEvent) {
 		case "COLOR":
 			this.selectColor(dataEvent);
 			break;
+		case "EDIT":
+			this.isEdit(dataEvent);
+			break;
+	}
+}
+
+Replay.prototype.isEdit = function(dataEvent)
+{
+	if(dataEvent.opStatus == "yes")
+	{
+		alert("ddd");
+	}
+	else
+	{
+		this.redrawNo();
+	}
+}
+
+Replay.prototype.redrawNo = function()
+{
+	//清空当前画板上所有的东西
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	//进行移位后重绘
+	for(var i = 0 ; i < this.allReplayData.length ; i++)
+	{
+		var object = this.allReplayData[i];
+		object.createPath(this.context);
+		if(object.isfill)
+		{
+			object.fill(this.context);
+		}
+		else
+		{
+			object.stroke(this.context);
+		}
+		if(object.name == "MYERA")
+		{
+			object.clear(this.context);
+		}		
+	}
+}
+
+Replay.prototype.redraw = function(index)
+{
+	//清空当前画板上所有的东西
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	//进行移位后重绘
+	for(var i = 0 ; i < this.allReplayData.length ; i++)
+	{
+		var object = this.allReplayData[i];
+		object.createPath(this.context);
+		if(object.isfill)
+		{
+			object.fill(this.context);
+		}
+		else
+		{
+			object.stroke(this.context);
+		}
+		if(object.name == "MYERA")
+		{
+			object.clear(this.context);
+		}
+		//判断是哪个重绘的时候才显示哪个
+		if(index == i)
+		{
+			object.showEdit(this.context);
+		}				
 	}
 }
 
@@ -59,13 +128,25 @@ Replay.prototype.playFromJson= function(dataEvent) {
 Replay.prototype.drag = function(dataEvent) {
 	//预留的接口，先不进行任何操作，方便以后的扩展
 	if (dataEvent.opStatus == "mouseDown") {
+		var index = dataEvent.index;    //要移动的对象的坐标
+		this.redraw(index);
 	}
 	//真正拖动进行的操作
 	if (dataEvent.opStatus == "mouseMove") {
 		var index = dataEvent.index;    //要移动的对象的坐标
 		var mouseX = dataEvent.mouseX;  //获取x轴移动的距离
 		var mouseY = dataEvent.mouseY;  //获取y轴移动的距离
-		this.allReplayData[index].move(mouseX,mouseY);
+		var isEdit = dataEvent.isEdit;   //是否处于编辑状态
+		if(isEdit == "yes")
+		{
+			var whichNum = dataEvent.whichNum;
+			this.allReplayData[index].change(whichNum,mouseX,mouseY);
+		}
+		else
+		{
+			this.allReplayData[index].move(mouseX,mouseY);
+		}
+		
 		//交换橡皮擦的位置
 		for(var j = index ; j < this.allReplayData.length ; j++)
 		{
@@ -77,26 +158,7 @@ Replay.prototype.drag = function(dataEvent) {
 				index = j;
 			}
 		}
-		//清空当前画板上所有的东西
-		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-		//进行移位后重绘
-		for(var i = 0 ; i < this.allReplayData.length ; i++)
-		{
-			var object = this.allReplayData[i];
-			object.createPath(this.context);
-			if(object.isfill)
-			{
-				object.fill(this.context);
-			}
-			else
-			{
-				object.stroke(this.context);
-			}
-			if(object.name == "MYERA")
-			{
-				object.clear(this.context);
-			}			
-		}
+		this.redraw(index);
 	}
 	//预留的接口，也不进行任何操作，方便以后扩展
 	if (dataEvent.opStatus == "mouseUp") {
@@ -329,6 +391,8 @@ Replay.prototype.drawText = function(dataEvent) {
 		
 		this.obj = new MyText(mouseX,mouseY,font,text,color);
 		this.obj.stroke(this.context);
+		
+		this.allReplayData.push(this.obj);
 	}
 }
 //同步颜色

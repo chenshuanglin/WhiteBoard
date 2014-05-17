@@ -3,26 +3,13 @@
 * date 2014/3/26
 */
 
-var allTimeEvent = new Array();   //保留当前操作的事件数组
-//var canvas;                      //定义一个画板对象
-//var context;                     //定义一个画画板对象的工具
-var allDataImage = new Array();   //所有图像数据对象，用于撤销和返回
 var index = 0;                       //allDataImage的下标
 var iosocket;
-//var mycanvas;
-var allObject;  //用来保存画板中所有的对象
+var judgeEdit = false;
 $(document).ready(function()
 {	
-
-	
-//	canvas = document.getElementById("mycanvas"); // 当前canvas属性
-//	context = canvas.getContext("2d");     //当前canvas的上下文对象
 	var mycanvas = new Mycanvas("mycanvas");
-	
-	allObject = new Array();
-	
-//	var drawingSurfaceData = context.getImageData(0,0,canvas.width,canvas.height);
-//	allDataImage.push(drawingSurfaceData);	
+	mycanvas.drawLine();
 	
 	//同步的代码
 	iosocket = io.connect();
@@ -42,19 +29,52 @@ $(document).ready(function()
           });
 	});
  
-	$('#tdrag').click(function(){
-		mycanvas.drag();
+	$("#edit").click(function()
+	{
+		if(!judgeEdit)
+		{
+			mycanvas.drag();
+			judgeEdit = true;
+			//弹出框让它缩进去
+			$("#showRect").fadeOut(100);
+			$("#showRect1").fadeOut(100);
+			$("#showRect2").fadeOut(100);
+			
+			//打包数据进行发送
+			var opType ="'opType':'EDIT'";
+			var opStatus = "'opStatus':'yes'";
+			//再次封装并发送
+			packageAndSend(opType,opStatus);
+		}
+		else
+		{
+			mycanvas.drawLine();
+			judgeEdit = false;
+			//打包数据进行发送
+			var opType ="'opType':'EDIT'";
+			var opStatus = "'opStatus':'no'";
+			//再次封装并发送
+			packageAndSend(opType,opStatus);
+		}
 	});
+	
 	//点击粉笔
 	$("#fenbi").click(function()
-	{		
-		mycanvas.drawLine();
-		$("#mycanvas").css("cursor","crosshair");
+	{	
+		if(!judgeEdit)
+		{
+			mycanvas.drawLine();
+			$("#mycanvas").css("cursor","crosshair");
+		}
+		
 	});
 	//点击直线
 	$("#zhixian").click(function()
 	{
-		mycanvas.drawStrLine();
+		if(!judgeEdit)
+		{
+			mycanvas.drawStrLine();
+		}
 	});
 	
 	//点击保存之后的事件
@@ -65,32 +85,26 @@ $(document).ready(function()
 	
 	//点击撤销之后的事件
 	$("#restore").click(function(){
-/*		var length = allDataImage.length;
-		if(length>=index )
-		{
-			context.putImageData(allDataImage[length-index-2],0,0);
-			index++;
-		}
-*/
+
 	});
 
 	//点击恢复之后的事情
 	$("#back").click(function(){
-/*		var length = allDataImage.length;
-		if(length>=index )
-		{
-			context.putImageData(allDataImage[length-index],0,0);
-			index--;
-		}
-*/
+		
 	});
 	
 	
 	//点击矩形事件
 	$("#juxing").click(function(e){
+		if(judgeEdit)
+		{
+			return;
+		}
 		 var myleft = e.clientX+10;
 		 var mytop = e.clientY+10;
 		
+		$("#showRect1").fadeOut(100);
+		$("#showRect2").fadeOut(100);
 		 if($("#showRect").css("display") == "none")
 		 {
 			  
@@ -118,9 +132,16 @@ $(document).ready(function()
 	
 	//点击圆形事件
 	$("#yuanxing").click(function(e){
+			if(judgeEdit)
+			{
+				return;
+			}
 			var myleft = e.clientX+10;
 			var mytop = e.clientY+10;
 		
+			//隐藏另外两个弹出div
+			$("#showRect").fadeOut(100);
+			$("#showRect2").fadeOut(100);
 		 	if($("#showRect1").css("display") == "none")
 		 	{
 			  $("#showRect1").css({left:myleft,top:mytop}).fadeIn(100);
@@ -146,8 +167,39 @@ $(document).ready(function()
 		});
 		
 	//点击三角形事件
-	$("#sanjiaoxing").click(function(){
+	$("#sanjiaoxing").click(function(e){
+			if(judgeEdit)
+			{
+				return;
+			}
+			var myleft = e.clientX+10;
+			var mytop = e.clientY+10;
+			
+			//隐藏另外两个弹出div
+			$("#showRect").fadeOut(100);
+			$("#showRect1").fadeOut(100);
+			
+		 	if($("#showRect2").css("display") == "none")
+		 	{
+			  $("#showRect2").css({left:myleft,top:mytop}).fadeIn(100);
+		 	}
+			else
+			{
+				$("#showRect2").fadeOut(100);	
+			}
+			//mycanvas.CdrawArc(2);
+		});
+	
+	//点击空心矩形事件
+	$("#kongsan").click(function(){
 		mycanvas.drawTri(false);
+		$("#showRect2").fadeOut(100);	
+		});
+	
+	//点击实心矩形事件
+	$("#shisan").click(function(){
+			mycanvas.drawTri(true);
+			$("#showRect2").fadeOut(100);	
 		});
 	
 	//点击曲线之后的事情
@@ -167,6 +219,10 @@ $(document).ready(function()
 	//点击橡皮擦的操作
 	
 	$("#xiangpica").click(function(e){
+		if(judgeEdit)
+		{
+			return;
+		}
 		 var myleft = e.clientX+10;
 		 var mytop = e.clientY+10;
 		
@@ -191,6 +247,10 @@ $(document).ready(function()
 	//点击字体
 	$("#wenzi").click(function()
 	{
+		if(judgeEdit)
+		{
+			return;
+		}
 		var font_family = $("#font_family").val();
 		var font_size = $("#font_size").val()+"px";
 		var myfont = font_size+" "+font_family;
@@ -211,15 +271,6 @@ $(document).ready(function()
 	$("#myText").focus(function()
 	{
 		$('#myText').val("");
-		//整合发送数据
-		var date =new Date();
-		var opTime = date.getTime();
-		var opId = "'opId':'canvas'"; 
-		opTime = "'opTime':"+"'"+opTime+"'";
-		var opType ="'opType':'WENZI'";
-		var opStatus="'opStatus':'clear'";
-		var dataEvent = "[{"+opId+","+opTime+","+opStatus+","+opType+"}]";
-		iosocket.send(dataEvent);
 	});
 						
 	//点击可拖动文本框的时候，获取文本框此时相对于父元素的内标签位置，并设置该div的cursor为可移动的
@@ -241,24 +292,25 @@ $(document).ready(function()
         var y = event.clientY-offsetY;
         $("#Drigging").css("left", x);
         $("#Drigging").css("top", y);
-		
-		//整合发送数据
-		var date =new Date();
-		var opTime = date.getTime();
-		var opId = "'opId':'canvas'"; 
-		opTime = "'opTime':"+"'"+opTime+"'";
-		var left = "'left':"+"'"+x+"'";
-		var top = "'top':"+"'"+y+"'";
-		var opType ="'opType':'WENZI'";
-		var opStatus="'opStatus':'move'";
-		var dataEvent = "[{"+opId+","+opTime+","+left+","+top+","+opStatus+","+opType+"}]";
-		iosocket.send(dataEvent);
     });
                
 	//以下代码是监控回车事件
 	$('#myText').keypress(function(e){ 
 		if (e.shiftKey && e.which==13 || e.which == 10) { //在ie6中 enter键码为10 在ff中 enter键码是13
-			mycanvas.writeText();
+			var x = $("#Drigging").css("left");  //获取可拖动文本框的距离左边框的距离
+	//		x = parseInt(x)-this.canvas.offsetLeft+5;   //跟画板的距离差
+			x = parseInt(x);
+			var y =$("#Drigging").css("top");    
+			y=parseInt(y);
+	//		y=parseInt(y)-this.canvas.offsetTop+18;				
+			//得到字体和字号大小
+			var font_family = $("#font_family").val();
+			var font_size = $("#font_size").val()+"px";
+			var myfont = font_size+" "+font_family;
+			//得到颜色
+			var color = "#"+$("#color").val();
+			var text = $("#myText").val()
+			mycanvas.writeText(x,y,myfont,text,color);
 			$("#Drigging").css("display","none"); //隐藏文本框
        		}          
 	});

@@ -169,6 +169,21 @@ ul{
 	border: 1px solid #5e4e3f;
 }
 
+#showRect2
+{
+	display:none;
+	position:absolute;
+	left:1px;
+	top:1px;
+	width:90px;
+	height:23px;
+	padding:5px;
+	background-color:#999;
+	z-index:9999;
+	border: 1px solid #5e4e3f;
+}
+
+
 /*录制部分代码*/
 #recordImg{
 	width:30px;

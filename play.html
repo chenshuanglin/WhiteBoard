@@ -4,26 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="./resources/css/style.css">
     <script src="resources/js/jquery-1.6.js" type="text/javascript"></script>
-    <script src="resources/js/allObject.js" type="text/javascript"></script>
+   <script src="resources/js/saveObject.js" type="text/javascript"></script>
     <script src="resources/js/jscolor.js" type="text/javascript"></script>
     <script src="resources/js/jvslider.js" type="text/javascript"></script>
+    <script src="resources/js/Replay.js" type="text/javascript"></script>
     <script type="text/javascript" src="resources/js/play.js"></script>
 	<script type="text/javascript">
 	
-		var allData = new Array();
-		
-	
-		var canvas;                      //定义一个画板对象
-		var context;  
-		var mycanvas;
+		var allData = new Array();  //存储文件上的所有数据，放在这个数组当中
 		var playBack;   
-			    
+		var replay;  
 		$(document).ready(function()
 		{
-			alert("dd");
-			canvas = document.getElementById("mycanvas"); // 当前canvas属性
-			context = canvas.getContext("2d");     //当前canvas的上下文对象
-			mycanvas = new MyCanvas();
+			alert("begin");
+//			mycanvas = new Mycanvas("mycanvas");
+			replay = new Replay("mycanvas");
 			<% alldata.forEach(function(name){ %>
 			allData.push("<%-name%>");
 			<% });%>

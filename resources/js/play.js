@@ -19,7 +19,7 @@ PlayBack.prototype.write = function(Ntime,index)
 	{
 		if(dataEnd[0].opId == "canvas")
 		{
-			mycanvas.drawEvery(dataEnd[0]);
+			replay.playFromJson(dataEnd[0]);
 		}
 		if(dataEnd[0].opId== "begin")
 		{
