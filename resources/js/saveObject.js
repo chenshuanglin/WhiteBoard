@@ -1302,7 +1302,7 @@ Mycanvas.prototype.xiangjiao = function(mouseX,mouseY)
 			}
 			if(obj.name == "MYLINE" && obj.lengthToEra(point1.x,point1.y,point4.x,point4.y))
 			{
-				that.allObject[i].isEra = true;
+				this.allObject[i].isEra = true;
 			}
 		}
 	}

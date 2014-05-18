@@ -8,7 +8,7 @@
     <script src="resources/js/jscolor.js" type="text/javascript"></script>
     <script src="resources/js/jvslider.js" type="text/javascript"></script>
     <script src="resources/js/Replay.js" type="text/javascript"></script>
-    <script type="text/javascript" src="resources/js/play.js"></script>
+    <script type="text/javascript" src="resources/js/play1.js"></script>
 	<script type="text/javascript">
 	
 		var allData = new Array();  //存储文件上的所有数据，放在这个数组当中
@@ -16,7 +16,6 @@
 		var replay;  
 		$(document).ready(function()
 		{
-			alert("begin");
 //			mycanvas = new Mycanvas("mycanvas");
 			replay = new Replay("mycanvas");
 			<% alldata.forEach(function(name){ %>
@@ -27,7 +26,7 @@
 		
 		function start()
 		{
-			alert("dd");
+			console.log("kaishi");
 			playBack.start();
 		}
 		

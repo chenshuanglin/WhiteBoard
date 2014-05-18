@@ -63,7 +63,7 @@ Replay.prototype.isEdit = function(dataEvent)
 {
 	if(dataEvent.opStatus == "yes")
 	{
-		alert("ddd");
+		
 	}
 	else
 	{
@@ -129,6 +129,8 @@ Replay.prototype.drag = function(dataEvent) {
 	//预留的接口，先不进行任何操作，方便以后的扩展
 	if (dataEvent.opStatus == "mouseDown") {
 		var index = dataEvent.index;    //要移动的对象的坐标
+		this.allReplayData[index].move(0,0);
+		
 		this.redraw(index);
 	}
 	//真正拖动进行的操作
