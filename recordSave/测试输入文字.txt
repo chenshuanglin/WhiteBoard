@@ -1,0 +1,3 @@
+[{'opId':'canvas','opTime':'1400572274868','opStatus':'show','opType':'WENZI'}]
+[{'opId':'canvas','opTime':'1400572282046','opType':'TEXT','mouseX':'147','mouseY':'191','opStatus':'write','font':'16px 宋体','text':'我车市 我输入文字','color':'#000000'}]
+[{'opId':'end','opTime':'1400572283965'}]

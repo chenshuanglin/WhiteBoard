@@ -2,13 +2,16 @@
 * @author 舒文静
 * date 2014/3/26
 */
-
-var index = 0;                       //allDataImage的下标
+                   
 var iosocket;
 var judgeEdit = false;
+var allObject = new Array();
+var mycanvas;
+
 $(document).ready(function()
 {	
-	var mycanvas = new Mycanvas("mycanvas");
+	mycanvas = new Mycanvas("mycanvas");
+	
 	mycanvas.drawLine();
 	
 	//同步的代码
@@ -31,9 +34,34 @@ $(document).ready(function()
  
 	$("#edit").click(function()
 	{
-		if(!judgeEdit)
+		var status = document.getElementById("edit").checked;
+		console.log(status);
+		if(status)
 		{
 			mycanvas.drag();
+			judgeEdit =true;
+			$("#showRect").fadeOut(100);
+			$("#showRect1").fadeOut(100);
+			$("#showRect2").fadeOut(100);
+			//打包数据进行发送
+			var opType ="'opType':'EDIT'";
+			var opStatus = "'opStatus':'yes'";
+			//再次封装并发送
+			packageAndSend(opType,opStatus);
+		}
+		else
+		{
+			judgeEdit =false;
+			mycanvas.drawLine();
+			//打包数据进行发送
+			var opType ="'opType':'EDIT'";
+			var opStatus = "'opStatus':'no'";
+			//再次封装并发送
+			packageAndSend(opType,opStatus);
+		}
+/*		if(!judgeEdit)
+		{
+//			mycanvas.drag();
 			judgeEdit = true;
 			//弹出框让它缩进去
 			$("#showRect").fadeOut(100);
@@ -56,6 +84,8 @@ $(document).ready(function()
 			//再次封装并发送
 			packageAndSend(opType,opStatus);
 		}
+		*/
+		
 	});
 	
 	//点击粉笔
@@ -204,6 +234,10 @@ $(document).ready(function()
 	
 	//点击曲线之后的事情
 	$("#quxian").click(function(){
+			if(judgeEdit)
+			{
+				return;
+			}
 			mycanvas.drawCurve();
 		});
 	

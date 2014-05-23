@@ -82,24 +82,12 @@
 		<button onclick="forward();">快进</button>
 		<div id="content"></div>
     <div class="container">
-    	<div class="namediv"><img alt="logo" src="./resources/photo/logo.png" style="width: 35px; height: 30px;">
+    	<div class="namediv"><img alt="logo" src="resources/photo/logo.png" style="width: 35px; height: 30px;">
     	</div>
     	<div class="tooldiv">
     		<ul>
-    			<li><img src="./resources/photo/baocun.png"  onmouseover="mouseover(1);" onmouseout="mouseout(1);" style="cursor:pointer;" id="save">
+    			<li><img src="resources/photo/baocun.png"  onmouseover="mouseover(1);" onmouseout="mouseout(1);" style="cursor:pointer;" id="save">
                 	<span class="tishi" id="tishi1">保存</span>
-                </li>
-    			<li style="padding-top: 2px;"><img src="./resources/photo/zuo.jpg" onmouseover="mouseover(2);" onmouseout="mouseout(2);" style="cursor:pointer;" id="restore">
-                	<span class="tishi" id="tishi2">撤销</span>
-                 </li>
-    			<li style="padding-top: 2px;"><img src="./resources/photo/you.jpg" onmouseover="mouseover(3);" onmouseout="mouseout(3);" style="cursor:pointer;" id="back">
-                	<span class="tishi" id="tishi3">恢复</span>
-                </li>
-    			<li style="padding-top: 2px;"><img src="./resources/photo/fangda.jpg" onmouseover="mouseover(4);" onmouseout="mouseout(4);" style="cursor:pointer;">
-               	 	<span class="tishi" id="tishi4">放大</span>
-                 </li>
-    			<li style="padding-top: 2px;"><img src="./resources/photo/suoxiao.jpg" onmouseover="mouseover(5);" onmouseout="mouseout(5);" style="cursor:pointer;">
-                	<span class="tishi" id="tishi5">缩小</span>
                 </li>
     			<li>&nbsp;&nbsp;<label>T&nbsp;</label>
     				<select style="height: 26px;" id="font_family">
@@ -155,10 +143,11 @@
     				</select>
     			</li>
     			<li style="padding-top: 2px;">
-                	<img src="./resources/photo/color.jpg" onmouseover="mouseover(6);" onmouseout="mouseout(6);">
+                	<img src="resources/photo/color.jpg" onmouseover="mouseover(6);" onmouseout="mouseout(6);">
                     <span class="tishi" id="tishi6">颜色</span>
                 </li>
                 <li><input class="color" id="color" value="000000"/></li>
+                <li><input type="checkbox" value="" id="edit" name="edit"/>编辑</li>
     		</ul>
     	</div>
     	<div class="contentdiv">
@@ -166,59 +155,70 @@
     			<ul>
     				<li><span class="zuospan" id="zuospan1">粉笔</span>
                     	<a href="javascript:void(0);" onmouseover="mouseover1(1);" onmouseout="mouseout1(1);" id="fenbi" >
-                        	<img alt="bi" src="./resources/photo/fenbi.jpg">
+                        	<img alt="bi" src="resources/photo/fenbi.jpg">
                         </a>
                     </li>
     				<li><span class="zuospan" id="zuospan2">直线</span>
                     	<a href="javascript:void(0);" onmouseover="mouseover1(2);" onmouseout="mouseout1(2);" id="zhixian">
-                        	<img alt="zhixian" src="./resources/photo/zhixian.jpg">
+                        	<img alt="zhixian" src="resources/photo/zhixian.jpg">
                          </a>
                     </li>
     				<li><span class="zuospan" id="zuospan3">矩形</span>
                     	<a href="#" onmouseover="mouseover1(3);" onmouseout="mouseout1(3);" id="juxing">
-                    		<img alt="juxing" src="./resources/photo/juxing.jpg"> 
+                    		<img alt="juxing" src="resources/photo/juxing.jpg"> 
                         </a>
                         <div id="showRect">
                         	<span class="zuospan" id="zuospan9">空心矩形</span>
                     		<a href="#" onmouseover="mouseover1(9);" onmouseout="mouseout1(9);" id="kongjuxing" style="margin-left:20px;">
-                    			<img alt="juxing" src="./resources/photo/juxing.jpg"> 
+                    			<img alt="juxing" src="resources/photo/juxing.jpg"> 
                        		 </a>
                              
                              <span class="zuospan" id="zuospan10">实心矩形</span>
                     		<a href="#" onmouseover="mouseover1(10);" onmouseout="mouseout1(10);" id="shijuxing">
-                    			<img alt="juxing" src="./resources/photo/juxing.jpg"> 
+                    			<img alt="juxing" src="resources/photo/juxing.jpg"> 
                        		 </a>
                         </div>
                     </li>
     				<li><span class="zuospan" id="zuospan4">圆形</span>
                     	<a href="#" onmouseover="mouseover1(4);" onmouseout="mouseout1(4);" id="yuanxing">
-                    		<img alt="yuan" src="./resources/photo/yuan.jpg">
+                    		<img alt="yuan" src="resources/photo/yuan.jpg">
                         </a>
                         <div id="showRect1">
                         	<span class="zuospan" id="zuospan11">空心圆形</span>
                     		<a href="#" onmouseover="mouseover1(11);" onmouseout="mouseout1(11);" id="kongyuan" style="margin-left:20px;">
-                    			<img alt="yuan" src="./resources/photo/yuan.jpg">
+                    			<img alt="yuan" src="resources/photo/yuan.jpg">
                        		 </a>
                              
                              <span class="zuospan" id="zuospan12">实心圆形</span>
                     		<a href="#" onmouseover="mouseover1(12);" onmouseout="mouseout1(12);" id="shiyuan">
-                    			<img alt="yuan" src="./resources/photo/yuan.jpg"> 
+                    			<img alt="yuan" src="resources/photo/yuan.jpg"> 
                        		 </a>
                         </div>
                     </li>
     				<li><span class="zuospan" id="zuospan6">三角形</span>
                    		<a href="#" onmouseover="mouseover1(6);" onmouseout="mouseout1(6);" id="sanjiaoxing">
-                    		<img alt="sanjiaoxing" src="./resources/photo/sanjiaoxing.jpg"> 
+                    		<img alt="sanjiaoxing" src="resources/photo/sanjiaoxing.jpg"> 
                         </a>
+                         <div id="showRect2">
+                        	<span class="zuospan" id="zuospan13">空三角形</span>
+                    		<a href="#" onmouseover="mouseover1(13);" onmouseout="mouseout1(13);" id="kongsan" style="margin-left:20px;">
+                    			<img alt="yuan" src="resources/photo/sanjiaoxing.jpg">
+                       		 </a>
+                             
+                             <span class="zuospan" id="zuospan14">实三角形</span>
+                    		<a href="#" onmouseover="mouseover1(14);" onmouseout="mouseout1(14);" id="shisan">
+                    			<img alt="yuan" src="resources/photo/sanjiaoxing.jpg"> 
+                       		 </a>
+                        </div>
                     </li>
                     <li><span class="zuospan" id="zuospan8">曲线</span>
                    		<a href="#" onmouseover="mouseover1(8);" onmouseout="mouseout1(8);" id="quxian">
-                    		<img alt="曲线" src="./resources/photo/quxian.jpg"> 
+                    		<img alt="曲线" src="resources/photo/quxian.jpg"> 
                         </a>
                     </li>
                     <li><span class="zuospan" id="zuospan5">橡皮檫</span>
                    		<a href="#" onmouseover="mouseover1(5);" onmouseout="mouseout1(5);" id="xiangpica">
-                    		<img alt="xiangpicha" src="./resources/photo/xiangpicha.jpg"> 
+                    		<img alt="xiangpicha" src="resources/photo/xiangpicha.jpg"> 
                         </a>
                         <div id="showInfo">
 								大小：<div id="slider"></div><label id="slidertext">16</label>
@@ -248,7 +248,6 @@
 											}
 											
 											$('#slidertext').html(percent);
-										
 											ERASER_WIDTH = percent;
 									},
 								click: function(percent){
@@ -258,7 +257,6 @@
 											percent=percent+1;
 										}
 										$('#slidertext').html(percent);
-										
 										ERASER_WIDTH = percent;
 									}
 								});
@@ -286,7 +284,7 @@
                     </li>
     				<li><span class="zuospan" id="zuospan7">文字</span>
                     	<a href="#" onmouseover="mouseover1(7);" onmouseout="mouseout1(7);" id="wenzi">
-                    		<img alt="zi" src="./resources/photo/zi.jpg">
+                    		<img alt="zi" src="resources/photo/zi.jpg">
                         </a>
                        <div id="Drigging" class="textDiv"><textarea class="textDiv" id="myText">请输入文字...输入完文字按shift+enter</textarea></div>
                     </li>
@@ -294,6 +292,7 @@
     		</div>
             <div style="display:inline; float:right; width:94%; height:100%;">
             	<canvas id="mycanvas" width="865" height="478"></canvas>
+                <script src="resources/js/main.js"></script>
             </div>
     	</div>
     </div>

@@ -39,10 +39,6 @@ MyLine.prototype.move = function(x,y)
 //判断点是否在线段里面
 MyLine.prototype.isPointIn = function(x,y)
 {
-	this.pointX = parseInt(this.pointX);
-	this.pointY = parseInt(this.pointY);
-	this.mouseX = parseInt(this.mouseX);
-	this.mouseY = parseInt(this.mouseY);
 	//判断是否是在端点之外
 	if(this.pointY > this.mouseY)
 	{
@@ -51,7 +47,6 @@ MyLine.prototype.isPointIn = function(x,y)
 			return false;
 		}
 	}
-
 	else
 	{
 		if(y>this.mouseY || y < this.pointY)
@@ -73,7 +68,6 @@ MyLine.prototype.isPointIn = function(x,y)
 		}
 	}
 	//有K值的情况
-
 	var k = (this.pointY - this.mouseY)/(this.pointX-this.mouseX);
 	var theY = k*(x-this.mouseX)+this.mouseY;
 	var range = theY-y;
@@ -598,12 +592,6 @@ MyXian.prototype.move = function(x,y)
 {
 
 }
-
-
-MyXian.prototype.showEdit = function(x,y)
-{
-}
-
 //文字对象
 var MyText = function(mouseX,mouseY,font,text,strokeStyle)
 {
@@ -641,7 +629,7 @@ MyText.prototype.fill = function(context)
 	context.restore();
 }
 
-MyText.prototype.move = function(x,y)
+MyXian.prototype.move = function(x,y)
 {
 
 }
@@ -689,13 +677,12 @@ var Mycanvas = function(canvasId)
 {
 	this.canvas = document.getElementById(canvasId);
 	this.context = this.canvas.getContext("2d");
-//	allObject = new Array();
+	this.allObject = new Array();
 }
 
 Mycanvas.prototype.pushObject = function(object)
 {
-//	
-allObject.push(object);
+	this.allObject.push(object);
 }
 
 //判断鼠标所在的点是处于哪个对象上
@@ -703,21 +690,16 @@ Mycanvas.prototype.choseIndex = function(mouseX,mouseY)
 {
 	var obj;
 	var index = -1;
-	for(var i = 0 ; i < allObject.length ; i++)
+	for(var i = 0 ; i < this.allObject.length ; i++)
 	{
-		obj = allObject[i];
+		obj = this.allObject[i];
 		obj.createPath(this.context);
-		if(obj.name=="MYXIAN")
-		{
-			continue;
-		}
 		if( !obj.isEra && this.context.isPointInPath(mouseX,mouseY) && obj.name!="MYERA")
 		{
 			index = i;
 			break;
 		}
 		//如果是直线的话进行如下操作
-		
 		if(!obj.isEra && obj.name == "MYLINE" && obj.isPointIn(mouseX,mouseY))
 		{
 			index = i;
@@ -730,9 +712,9 @@ Mycanvas.prototype.choseIndex = function(mouseX,mouseY)
 Mycanvas.prototype.redrawNo = function()
 {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	for(var i = 0 ; i < allObject.length ; i++)
+	for(var i = 0 ; i < this.allObject.length ; i++)
 	{
-		var obj = allObject[i];
+		var obj = this.allObject[i];
 		obj.createPath(this.context);
 		if(obj.isfill)
 		{
@@ -754,9 +736,9 @@ Mycanvas.prototype.redrawNo = function()
 Mycanvas.prototype.redraw = function(index)
 {
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	for(var i = 0 ; i < allObject.length ; i++)
+	for(var i = 0 ; i < this.allObject.length ; i++)
 	{
-		var obj = allObject[i];
+		var obj = this.allObject[i];
 		obj.createPath(this.context);
 		if(obj.isfill)
 		{
@@ -807,7 +789,7 @@ Mycanvas.prototype.drag = function()
 			{
 				that.redraw(index);
 				isDrag = true;
-//				allObject[index].showEdit(context);
+//				that.allObject[index].showEdit(context);
 				canEdit = true;
 				
 				//打包数据进行发送
@@ -822,7 +804,7 @@ Mycanvas.prototype.drag = function()
 		//根据点中的哪个再进行判断，是否是属于编辑状态
 		else
 		{
-			isWhich = allObject[index].judgeEdit(mouseX,mouseY);
+			isWhich = that.allObject[index].judgeEdit(mouseX,mouseY);
 			if(isWhich != 0)
 			{
 				isEdit = true;
@@ -830,7 +812,7 @@ Mycanvas.prototype.drag = function()
 			}
 			else
 			{
-				allObject[index].createPath(context);
+				that.allObject[index].createPath(context);
 				if(context.isPointInPath(mouseX,mouseY))
 				{
 					isDrag = true;
@@ -855,7 +837,7 @@ Mycanvas.prototype.drag = function()
 			var width = mouseX-pointX;
 			var height = mouseY-pointY;
 			if(isEdit){ //编辑的话进行如下操作
-				allObject[index].change(isWhich,width,height);	
+				that.allObject[index].change(isWhich,width,height);	
 				
 				//打包数据进行发送
 				var mouseX1 = "'mouseX':"+"'"+width+"'";
@@ -869,7 +851,7 @@ Mycanvas.prototype.drag = function()
 				packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus,isInEdit,whichNum);
 			}
 			else{
-				allObject[index].move(width,height);
+				that.allObject[index].move(width,height);
 				
 				//打包数据进行发送
 				var mouseX1 = "'mouseX':"+"'"+width+"'";
@@ -882,13 +864,13 @@ Mycanvas.prototype.drag = function()
 				packageAndSend(opType,mouseX1,mouseY1,indexStr,opStatus,isInEdit);
 			}
 			//交换橡皮擦位置
-			for(var j = index ; j < allObject.length ; j++)
+			for(var j = index ; j < that.allObject.length ; j++)
 			{
-				if(allObject[j].name == "MYERA")
+				if(that.allObject[j].name == "MYERA")
 				{
-					var temp = allObject[j];
-					allObject[j] = allObject[index];
-					allObject[index] = temp;
+					var temp = that.allObject[j];
+					that.allObject[j] = that.allObject[index];
+					that.allObject[index] = temp;
 					index = j;
 				}
 			}
@@ -962,7 +944,7 @@ Mycanvas.prototype.drawStrLine = function()
 	this.canvas.onmouseup = function(e)
 	{
 		isDown = false;
-allObject.push(myLine);
+		that.pushObject(myLine);
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'STRLINE'";
 		packageAndSend(opType,opStatus);
@@ -1033,8 +1015,7 @@ Mycanvas.prototype.drawRect = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'RECT'";
 		packageAndSend(opType,opStatus);
-		
-allObject.push(myRect);
+		that.pushObject(myRect);
 	}
 }
 
@@ -1100,8 +1081,7 @@ Mycanvas.prototype.drawTri = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'TRI'";
 		packageAndSend(opType,opStatus);
-		
-allObject.push(myTri);
+		that.pushObject(myTri);
 	}
 }
 
@@ -1169,8 +1149,7 @@ Mycanvas.prototype.drawArc = function(isFill)
 		var opStatus="'opStatus':'mouseUp'";
 		var opType ="'opType':'ARC'";
 		packageAndSend(opType,opStatus);
-		
-allObject.push(myArc);
+		that.pushObject(myArc);
 	}
 }
 
@@ -1210,8 +1189,7 @@ Mycanvas.prototype.eraser = function()
 		myEraser.stroke(context);
 		//加入维护的对象列表中
 		that.xiangjiao(mouseX,mouseY); //判断相交，并更改值
-		
-allObject.push(myEraser);
+		that.pushObject(myEraser);
 		isDown = true;
 		//封装数据
 		mouseX1 = mouseX-ERASER_WIDTH/2;
@@ -1239,8 +1217,7 @@ allObject.push(myEraser);
 			myEraser.stroke(context);
 			//加入维护的对象列表中
 			that.xiangjiao(mouseX,mouseY); //判断相交，并更改值
-			
-allObject.push(myEraser);
+			that.pushObject(myEraser);
 			//封装数据
 			mouseX1 = mouseX-ERASER_WIDTH/2;
 			mouseY1 = mouseY-ERASER_WIDTH/2;
@@ -1306,7 +1283,7 @@ Mycanvas.prototype.xiangjiao = function(mouseX,mouseY)
 	var context = this.context;
 	//定义一个保存有几个点是在图形里面的数组对像
 	var numPoints = [];
-	for(var i = 0 ; i < allObject.length ; i++)
+	for(var i = 0 ; i < this.allObject.length ; i++)
 	{
 		numPoints[i] = 0 ;
 	}
@@ -1314,51 +1291,35 @@ Mycanvas.prototype.xiangjiao = function(mouseX,mouseY)
 	//遍历四个点判断是否跟某个图形有相交，如果相交的话，把某个图形的isEra 置为true
 	for(var j = 0; j < points.length ; j++)
 	{
-		for(var i = 0 ; i < allObject.length ; i++)
+		for(var i = 0 ; i < this.allObject.length ; i++)
 		{
-			var obj = allObject[i];
+			var obj = this.allObject[i];
 			obj.createPath(context);
 			if(obj.name!="MYERA" && context.isPointInPath(points[j].getX(),points[j].getY()))
 			{
-//				allObject[i].isEra = true;
+//				that.allObject[i].isEra = true;
 				numPoints[i] = numPoints[i]+1;
 			}
 			if(obj.name == "MYLINE" && obj.lengthToEra(point1.x,point1.y,point4.x,point4.y))
 			{
-				allObject[i].isEra = true;
-				
-				var indexStr = "'index':"+"'"+i+"'";
-				var opStatus="'opStatus':'xiangjiao'";
-				var opType ="'opType':'ERASER'";
-				//再次封装并发送
-				packageAndSend(opType,indexStr,opStatus);
+				this.allObject[i].isEra = true;
 			}
 		}
 	}
 	//遍历numPoints对象
-	for(var k = 0 ;  k < allObject.length ; k++)
+	for(var k = 0 ;  k < this.allObject.length ; k++)
 	{
 		if(numPoints[k] > 0 )
 		{
-			if(allObject[k].isfill == true)
+			if(this.allObject[k].isfill == true)
 			{
-				allObject[k].isEra = true;
-				var indexStr = "'index':"+"'"+k+"'";
-				var opStatus="'opStatus':'xiangjiao'";
-				var opType ="'opType':'ERASER'";
-				//再次封装并发送
-				packageAndSend(opType,indexStr,opStatus);
+				this.allObject[k].isEra = true;
 			}
 			else
 			{
 				if(numPoints[k] < 4)
 				{
-					allObject[k].isEra = true;
-					var indexStr = "'index':"+"'"+k+"'";
-					var opStatus="'opStatus':'xiangjiao'";
-					var opType ="'opType':'ERASER'";
-					//再次封装并发送
-					packageAndSend(opType,indexStr,opStatus);
+					this.allObject[k].isEra = true;
 				}
 					
 			}
@@ -1440,8 +1401,7 @@ Mycanvas.prototype.drawCurve = function()
 			var opStatus="'opStatus':'mouseUp'";
 			var opType ="'opType':'CUR'";
 			packageAndSend(opType,opStatus);
-			
-allObject.push(myCur);
+			that.pushObject(myCur);
 		}
 		
 	}
@@ -1514,8 +1474,7 @@ Mycanvas.prototype.drawLine = function()
 			var opStatus="'opStatus':'mouseUp'";
 			//再次封装并发送
 			packageAndSend(opType,opStatus);
-			
-allObject.push(myXian);	
+			that.pushObject(myXian);	
 		}
 	}
 	
@@ -1525,8 +1484,7 @@ allObject.push(myXian);
 		var opStatus="'opStatus':'mouseUp'";
 		//再次封装并发送
 		packageAndSend(opType,opStatus);
-		
-allObject.push(myXian);
+		that.pushObject(myXian);
 		isDown = false;
 //		redraw();
 	}
@@ -1561,7 +1519,7 @@ Mycanvas.prototype.writeText = function(x,y,myfont,text,color)
 	var opStatus="'opStatus':'write'";
 	var opType ="'opType':'TEXT'";
 	//再次封装并发送
-	packageAndSend(opType,mouseX,mouseY,opStatus,font,textstr,color);
+	packageAndSend(opType,mouseX,mouseY,opStatus,font,textstr);
 	this.redrawNo();
 
 }

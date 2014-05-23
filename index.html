@@ -49,7 +49,8 @@
 				opTime = "'opTime':"+"'"+opTime+"'";
 				var dataEvent = "[{"+opId+","+opTime+"}]";
 				iosocket.send(dataEvent);
-				window.location.href="/save";
+				var filename = prompt("请输入你想要保存的文件名：");
+				window.location.href="/save?filename="+filename;
 			}
 			else
 			{
@@ -140,6 +141,7 @@
                 </li>
                 <li><input class="color" id="color" value="000000"/></li>
                 <li><input type="checkbox" value="" id="edit" name="edit"/>编辑</li>
+                <li><input type="text" id="editText"/></li>
     		</ul>
     	</div>
     	<div class="contentdiv">
@@ -242,7 +244,7 @@
 											$('#slidertext').html(percent);
 											ERASER_WIDTH = percent;
 									},
-								click: function(percent){
+									click: function(percent){
 										//保证是偶数
 										if(percent%2 != 0)
 										{

@@ -24,6 +24,7 @@ PlayBack.prototype.play = function (opId,dataEvent) {
 			break;
 		case "end":
 			this.isStop = true;
+			this.isEnd = true;
 			break;
 	}	
 }
@@ -31,7 +32,7 @@ PlayBack.prototype.play = function (opId,dataEvent) {
 //播放事件
 PlayBack.prototype.playEvent = function()
 {
-	for (var i = this.index ; ; i++) {
+	for (var i = this.index ; i < this.length ; i++) {
 		var dataEnd = eval(this.allData[i]);
 		var dataBegin = eval(this.allData[0]);
 		var timeLong = dataEnd[0].opTime-dataBegin[0].opTime;
@@ -79,6 +80,10 @@ PlayBack.prototype.stop = function()
 //回放对象的快进函数
 PlayBack.prototype.forward = function()
 {
+	if(this.isEnd)
+	{
+		return;
+	}
 	this.isStop = true;  //先停止在快进时间
 	this.time = this.time+2000;  //快进两秒
 	var dataBegin = eval(this.allData[0]);
@@ -103,10 +108,16 @@ PlayBack.prototype.forward = function()
 //回放对象的快退函数
 PlayBack.prototype.backward = function(context,canvas)
 {
+	if(this.index == 0)
+	{
+		return;
+	}
+	this.isEnd = false;
 	this.isStop = true;
 	this.time = this.time-2000;  //快退两秒
 	var dataBegin = eval(this.allData[0]);
-	context.clearRect (0 , 0, canvas.width , canvas.height );
+	//画板调用如下重置
+	replay.reSet();
 	this.index = 0 ;
 	for(var i = 0 ; i < this.length; i++)
 	{

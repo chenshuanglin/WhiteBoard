@@ -5,7 +5,7 @@
 
 
 var Replay = function (canvasId) {
-	this.allReplayData = new Array();
+//	allObject = new Array();
 	this.canvas = document.getElementById(canvasId);
 	this.context = this.canvas.getContext("2d");
 	//当前操作对象
@@ -19,6 +19,14 @@ var Replay = function (canvasId) {
 	this.width;
 
 }
+
+//重置数据
+Replay.prototype.reSet = function()
+{
+	this.context.clearRect(0 , 0, this.canvas.width , this.canvas.height );
+	allObject = new Array();
+}
+
 //根据传递过来的对象进行操作
 Replay.prototype.playFromJson= function(dataEvent) {
 //	this.redrawNo();
@@ -63,10 +71,19 @@ Replay.prototype.isEdit = function(dataEvent)
 {
 	if(dataEvent.opStatus == "yes")
 	{
-		
+
+		document.getElementById("edit").checked = true;
+		mycanvas.drag();
+		$("#showRect").fadeOut(100);
+		$("#showRect1").fadeOut(100);
+		$("#showRect2").fadeOut(100);
+		judgeEdit = true;
 	}
 	else
 	{
+		mycanvas.drawLine();
+		document.getElementById("edit").checked = false;
+		judgeEdit = false;
 		this.redrawNo();
 	}
 }
@@ -76,9 +93,9 @@ Replay.prototype.redrawNo = function()
 	//清空当前画板上所有的东西
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	//进行移位后重绘
-	for(var i = 0 ; i < this.allReplayData.length ; i++)
+	for(var i = 0 ; i < allObject.length ; i++)
 	{
-		var object = this.allReplayData[i];
+		var object = allObject[i];
 		object.createPath(this.context);
 		if(object.isfill)
 		{
@@ -100,9 +117,9 @@ Replay.prototype.redraw = function(index)
 	//清空当前画板上所有的东西
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	//进行移位后重绘
-	for(var i = 0 ; i < this.allReplayData.length ; i++)
+	for(var i = 0 ; i < allObject.length ; i++)
 	{
-		var object = this.allReplayData[i];
+		var object = allObject[i];
 		object.createPath(this.context);
 		if(object.isfill)
 		{
@@ -129,7 +146,7 @@ Replay.prototype.drag = function(dataEvent) {
 	//预留的接口，先不进行任何操作，方便以后的扩展
 	if (dataEvent.opStatus == "mouseDown") {
 		var index = dataEvent.index;    //要移动的对象的坐标
-		this.allReplayData[index].move(0,0);
+		allObject[index].move(0,0);
 		
 		this.redraw(index);
 	}
@@ -142,21 +159,21 @@ Replay.prototype.drag = function(dataEvent) {
 		if(isEdit == "yes")
 		{
 			var whichNum = dataEvent.whichNum;
-			this.allReplayData[index].change(whichNum,mouseX,mouseY);
+			allObject[index].change(whichNum,mouseX,mouseY);
 		}
 		else
 		{
-			this.allReplayData[index].move(mouseX,mouseY);
+			allObject[index].move(mouseX,mouseY);
 		}
 		
 		//交换橡皮擦的位置
-		for(var j = index ; j < this.allReplayData.length ; j++)
+		for(var j = index ; j < allObject.length ; j++)
 		{
-			if(this.allReplayData[j].name == "MYERA")
+			if(allObject[j].name == "MYERA")
 			{
-				var temp = this.allReplayData[j];
-				this.allReplayData[j] = this.allReplayData[index];
-				this.allReplayData[index] = temp;
+				var temp = allObject[j];
+				allObject[j] = allObject[index];
+				allObject[index] = temp;
 				index = j;
 			}
 		}
@@ -186,7 +203,8 @@ Replay.prototype.drawLine = function(dataEvent) {
 		this.obj.stroke(this.context);
 	}
 	if (dataEvent.opStatus == "mouseUp") {
-		this.allReplayData.push(this.obj);	
+		
+		allObject.push(this.obj);	
 	}
 }
 
@@ -209,7 +227,8 @@ Replay.prototype.drawStrLine = function(dataEvent) {
 		this.obj.stroke(this.context);
 	}
 	if (dataEvent.opStatus == "mouseUp") {
-		this.allReplayData.push(this.obj);	
+		
+		allObject.push(this.obj);	
 	}
 }
 
@@ -227,7 +246,8 @@ Replay.prototype.drawEraser= function(dataEvent) {
 		this.obj = new  MyEraser(mouseX,mouseY,width);
 		this.obj.createPath(this.context);
 		this.obj.stroke(this.context);
-		this.allReplayData.push(this.obj);
+		
+		allObject.push(this.obj);
 	}
 	if (dataEvent.opStatus == "mouseMove") {
 		this.context.clearRect(this.pointX,this.pointY,this.width,this.width);
@@ -242,7 +262,8 @@ Replay.prototype.drawEraser= function(dataEvent) {
 		this.obj = new  MyEraser(mouseX,mouseY,width);
 		this.obj.createPath(this.context);
 		this.obj.stroke(this.context);
-		this.allReplayData.push(this.obj);	
+		
+		allObject.push(this.obj);	
 	}
 	if (dataEvent.opStatus == "mouseUp") {
 		var mouseX = dataEvent.mouseX;
@@ -251,6 +272,10 @@ Replay.prototype.drawEraser= function(dataEvent) {
 		this.context.clearRect(this.pointX,this.pointY,this.width,this.width);
 	}
 
+	if (dataEvent.opStatus == "xiangjiao") {
+		var index = dataEvent.index;
+		allObject[index].isEra = true;
+	}
 }
 
 //矩形同步方法
@@ -282,7 +307,8 @@ Replay.prototype.drawRect = function(dataEvent) {
 	}
 	if (dataEvent.opStatus == "mouseUp") {
 		
-		this.allReplayData.push(this.obj);	
+		
+allObject.push(this.obj);	
 	}
 }
 
@@ -315,7 +341,8 @@ Replay.prototype.drawArc = function(dataEvent) {
 	}
 	if (dataEvent.opStatus == "mouseUp") {
 		
-		this.allReplayData.push(this.obj);	
+		
+allObject.push(this.obj);	
 	}
 }
 
@@ -348,7 +375,8 @@ Replay.prototype.drawTri = function(dataEvent) {
 	}
 	if (dataEvent.opStatus == "mouseUp") {
 		
-		this.allReplayData.push(this.obj);	
+		
+allObject.push(this.obj);	
 	}
 }
 
@@ -376,7 +404,8 @@ Replay.prototype.drawCurve = function(dataEvent) {
 	}
 	if (dataEvent.opStatus == "mouseUp") {
 		
-		this.allReplayData.push(this.obj);	
+		
+allObject.push(this.obj);	
 	}
 }
 
@@ -394,11 +423,14 @@ Replay.prototype.drawText = function(dataEvent) {
 		this.obj = new MyText(mouseX,mouseY,font,text,color);
 		this.obj.stroke(this.context);
 		
-		this.allReplayData.push(this.obj);
+		
+allObject.push(this.obj);
 	}
 }
 //同步颜色
 Replay.prototype.selectColor = function(dataEvent){
 	var color = dataEvent.color;
 	$('#color').val(color);
+	var color = "#"+color;
+	$('#color').css('background-color',color);
 }

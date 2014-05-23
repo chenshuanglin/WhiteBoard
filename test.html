@@ -1,0 +1,43 @@
+<html>
+	<head>
+    	<script src="resources/js/jquery-1.6.js" type="text/javascript"></script>
+    	<script type="text/javascript">
+			/*以下代码是点击录制的代码*/
+			
+		function begin()
+		{
+			$.ajax({
+				type:"get",
+				async:false,
+				url:"http://localhost:8080/begin",
+				success:function(data){
+					alert(data);
+				},
+				error:function(){
+					alert("fail");
+				}
+			});
+		}
+		
+		function end()
+		{
+			var filename = prompt("请输入你想要保存的文件名：");
+			$.ajax({
+				type:"get",
+				async:false,
+				url:"http://localhost:8080/save?filename=ddddd",
+				success:function(data){
+					alert(data);
+				},
+				error:function(){
+					alert("fail");
+				}
+			});
+		}
+        </script>
+	</head>
+	<body>
+		<button onclick="begin();">开始录制</button>
+        <button onclick="end();">结束录制</button>
+	</body>
+</html>

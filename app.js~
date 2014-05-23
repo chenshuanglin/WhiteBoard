@@ -59,8 +59,7 @@ app.get('/play',function (req,res) {
 //把消息存入文件中
 app.get('/save', function(req, res){
 	//根据时间来为文件命名
-//	var filename = new Date().getTime();
-	var filename = req.param('filename');
+	var filename = new Date().getTime();
 	var filepath = __dirname+"/recordSave/"+filename+".txt";
   	//以写入模式打开文件,不存在者创建文件
   	fs.open(filepath,'w',function (err,fd){
