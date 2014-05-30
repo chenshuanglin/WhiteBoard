@@ -80,7 +80,7 @@ app.get('/save', function(req, res){
 });
 
 
-//读取文件中的内容并以
+//读取文件中的内容到数组中并返回
 
 function readFileToArray(filepath) {
 	var dataArray=[];

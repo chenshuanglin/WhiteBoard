@@ -27,6 +27,7 @@ PlayBack.prototype.play = function (opId,dataEvent) {
 			this.isEnd = true;
 			break;
 	}	
+	
 }
 
 //播放事件
